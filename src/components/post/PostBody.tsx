@@ -2,6 +2,10 @@ import { rgbDataURL } from "@/functions/image";
 import { TPost } from "@/types/post";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Image from "next/image";
+import rehypePrettyCode from "rehype-pretty-code";
+import rehypeSlug from "rehype-slug";
+import remarkBreaks from "remark-breaks";
+import remarkGfm from "remark-gfm";
 
 const PostBody = ({ post }: { post: TPost }) => {
   const { title, subTitle, thumbnail, readingMinutes, createdAt } = post;
@@ -29,7 +33,23 @@ const PostBody = ({ post }: { post: TPost }) => {
         </div>
       )}
 
-      <MDXRemote source={post.content} />
+      <MDXRemote
+        source={post.content}
+        options={{
+          mdxOptions: {
+            remarkPlugins: [remarkGfm, remarkBreaks],
+            rehypePlugins: [
+              [
+                rehypePrettyCode,
+                {
+                  theme: { dark: "github-dark-dimmed", light: "github-light" },
+                },
+              ],
+              rehypeSlug,
+            ],
+          },
+        }}
+      />
     </div>
   );
 };

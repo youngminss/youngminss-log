@@ -8,17 +8,10 @@ import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 
 const PostBody = ({ post }: { post: TPost }) => {
-  const { title, subTitle, thumbnail, readingMinutes, createdAt } = post;
+  const { thumbnail } = post;
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex flex-col">
-        <h2>{title}</h2>
-        <h3>{subTitle}</h3>
-        <span>{readingMinutes}</span>
-        <span>{createdAt}</span>
-      </div>
-
       {thumbnail && (
         <div className="relative aspect-[1.618]">
           <Image

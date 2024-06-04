@@ -1,4 +1,6 @@
 import PostBody from "@/components/post/PostBody";
+import PostFooter from "@/components/post/PostFooter";
+import PostHeader from "@/components/post/PostHeader";
 import { getPostDetail } from "@/functions/post";
 
 const PostDetail = async ({
@@ -12,8 +14,10 @@ const PostDetail = async ({
   });
 
   return (
-    <div>
+    <div className="flex flex-col">
+      <PostHeader post={post} />
       <PostBody post={post} />
+      <PostFooter />
     </div>
   );
 };

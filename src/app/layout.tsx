@@ -1,5 +1,7 @@
+import FloatingActions from "@/components/common/FloatingActions";
 import Footer from "@/components/common/Footer";
 import Header from "@/components/common/Header";
+import ThemeProvider from "@/components/providers/ThemeProvider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -17,11 +19,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
-      <body className={`${inter.className} mx-auto relative max-w-[1200px]`}>
-        <Header />
-        {children}
-        <Footer />
+    <html lang="ko" suppressHydrationWarning>
+      <body
+        className={`relative mx-auto max-w-[1200px] bg-[var(--background)] text-[var(--foreground)] ${inter.className} `}
+      >
+        <ThemeProvider>
+          <Header />
+          {children}
+          <Footer />
+          <FloatingActions />
+        </ThemeProvider>
       </body>
     </html>
   );

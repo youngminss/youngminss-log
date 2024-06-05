@@ -1,12 +1,16 @@
-import FloatingActions from "@/components/common/FloatingActions";
-import Footer from "@/components/common/Footer";
-import Header from "@/components/common/Header";
+import FloatingActions from "@/components/layout/FloatingActions";
+import Footer from "@/components/layout/Footer";
+import Header from "@/components/layout/Header";
 import ThemeProvider from "@/components/providers/ThemeProvider";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const pretendard = localFont({
+  src: "../../public/fonts/PretendardVariable.woff2",
+  display: "swap",
+  variable: "--font-pretendard",
+});
 
 export const metadata: Metadata = {
   title: "영민하다",
@@ -21,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <body
-        className={`relative mx-auto max-w-[1200px] bg-[var(--background)] text-[var(--foreground)] ${inter.className} `}
+        className={`relative mx-auto max-w-[120rem] bg-[var(--background)] text-[var(--foreground)] transition-colors duration-300 ${pretendard.variable} `}
       >
         <ThemeProvider>
           <Header />

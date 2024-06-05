@@ -3,7 +3,6 @@
 import { Check, Laptop2, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +10,13 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
-const ThemeMode = () => {
+const ThemeModeButton = ({
+  className = "",
+  onClick,
+}: {
+  className?: string;
+  onClick?: () => void;
+}) => {
   const [mounted, setMounted] = useState(false);
   const { setTheme, theme, systemTheme } = useTheme();
 
@@ -25,7 +30,15 @@ const ThemeMode = () => {
     label: string;
   }) => {
     return (
-      <DropdownMenuItem onClick={() => setTheme(themeMode)}>
+      <DropdownMenuItem
+        onClick={() => {
+          setTheme(themeMode);
+
+          if (onClick) {
+            onClick();
+          }
+        }}
+      >
         <div className="flex items-center gap-[0.8rem]">
           <Icon size={16} />
           <span>{label}</span>
@@ -44,34 +57,20 @@ const ThemeMode = () => {
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon">
-          {systemTheme === "dark" ? <Moon /> : <Sun />}
-        </Button>
+    <DropdownMenu modal={false}>
+      <DropdownMenuTrigger
+        asChild
+        className={`rounded-[0.4rem] bg-opacity-70 p-[0.8rem] hover:bg-[--foreground] dark:hover:text-[--background] ${className}`}
+      >
+        {systemTheme === "dark" ? <Moon size={40} /> : <Sun size={40} />}
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <ThemeModeItem
-          key={`theme-mode-${theme}`}
-          themeMode="light"
-          label="Light"
-          Icon={Sun}
-        />
-        <ThemeModeItem
-          key={`theme-mode-${theme}`}
-          themeMode="dark"
-          label="Dark"
-          Icon={Moon}
-        />
-        <ThemeModeItem
-          key={`theme-mode-${theme}`}
-          themeMode="system"
-          label="System"
-          Icon={Laptop2}
-        />
+      <DropdownMenuContent side="top" align="end">
+        <ThemeModeItem themeMode="light" label="Light" Icon={Sun} />
+        <ThemeModeItem themeMode="dark" label="Dark" Icon={Moon} />
+        <ThemeModeItem themeMode="system" label="System" Icon={Laptop2} />
       </DropdownMenuContent>
     </DropdownMenu>
   );
 };
 
-export default ThemeMode;
+export default ThemeModeButton;

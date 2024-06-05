@@ -12,11 +12,14 @@ const config = {
     container: {
       center: true,
       padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
     },
     extend: {
+      screens: {
+        pc: "1200px",
+      },
+      fontFamily: {
+        pretendard: ["var(--font-pretendard)"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

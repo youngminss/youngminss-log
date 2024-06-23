@@ -4,12 +4,12 @@ import Link from "next/link";
 
 const Header = () => {
   return (
-    <header className="max-pc:px-[2rem] sticky top-0 z-[999] flex h-[6.4rem] w-full items-center backdrop-blur">
+    <header className="custom-blur sticky top-0 z-[999] flex h-[6.4rem] w-full items-center backdrop-blur max-pc:px-[2rem]">
       <h1 className="font-pretendard text-[3.2rem] font-black">
         <Link href="/">영민하다</Link>
       </h1>
 
-      <nav className="font-pretendard ml-auto font-medium">
+      <nav className="ml-auto font-pretendard font-medium">
         <ul className="flex items-center gap-x-[1.2rem]">
           <li>
             <Link href="/posts">

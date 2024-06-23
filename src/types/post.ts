@@ -5,10 +5,10 @@ export type TPost = {
   dateString: string;
   readingMinutes: number;
   content: string;
-  title?: string;
-  subTitle?: string;
+  title: string;
+  introduction?: string;
   thumbnail?: string;
-  createdAt?: string;
+  createdAt: string;
 };
 
 export type TPostAbstract = Pick<TPost, "url" | "category" | "slug">;

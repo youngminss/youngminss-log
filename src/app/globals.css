@@ -84,3 +84,8 @@
 html {
   font-size: 10px;
 }
+
+.custom-blur {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}

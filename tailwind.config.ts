@@ -16,6 +16,7 @@ const config = {
     extend: {
       screens: {
         pc: "1200px",
+        postCard: "640px",
       },
       fontFamily: {
         pretendard: ["var(--font-pretendard)"],

@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const Header = () => {
   return (
-    <header className="max-pc:px-[2rem] sticky top-0 flex h-[6.4rem] w-full items-center backdrop-blur">
+    <header className="max-pc:px-[2rem] sticky top-0 z-[999] flex h-[6.4rem] w-full items-center backdrop-blur">
       <h1 className="font-pretendard text-[3.2rem] font-black">
         <Link href="/">영민하다</Link>
       </h1>

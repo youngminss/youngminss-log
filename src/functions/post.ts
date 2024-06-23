@@ -37,7 +37,14 @@ const parsePostDetail = async (postPath: string): Promise<TPostDetail> => {
     .locale("ko")
     .format("YYYY년 MM월 DD일");
 
-  return { dateString, readingMinutes, content, ...grayMatter };
+  return {
+    dateString,
+    readingMinutes,
+    content,
+    title: data["title"],
+    createdAt: data["createdAt"],
+    ...grayMatter,
+  };
 };
 
 export const getPostDetail = async ({
@@ -67,7 +74,33 @@ export const getPostList = async (category?: string) => {
 export const getCategoryList = () => {
   const categoryPaths: string[] = sync(`${POSTS_PATH}/*`);
   const categoryList = categoryPaths.map(
-    (path) => path.split("/").slice(-1)?.[0]
+    (path) => path.split("/").slice(-1)?.[0],
   );
   return categoryList;
+};
+
+// mdx 의 createdAt 지정한 형식
+export const parseDateString = (dateString: string) => {
+  const [datePart, timePart] = dateString.split(" ");
+  const [year, month, day] = datePart
+    .split(".")
+    .map((part) => part.trim())
+    .map(Number);
+
+  const period = dateString.includes("오전") ? "오전" : "오후";
+  const timeString = dateString.split(period)[1].trim();
+  const { hour, minute, second } = convertTo24Hour(timeString, period);
+
+  return new Date(year, month - 1, day, hour, minute, second);
+};
+
+const convertTo24Hour = (timeString: string, period: string) => {
+  let [hour, minute, second] = timeString.split(":").map(Number);
+
+  if (period === "오후" && hour !== 12) {
+    hour += 12;
+  } else if (period === "오전" && hour === 12) {
+    hour = 0;
+  }
+  return { hour, minute, second };
 };

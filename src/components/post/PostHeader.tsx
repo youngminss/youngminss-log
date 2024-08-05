@@ -40,7 +40,7 @@ const PostHeader = ({ post }: { post: TPost }) => {
         </div>
       )}
 
-      <p className="font-pretendard text-[1.6rem] font-normal">
+      <p className="pb-[1.6rem] font-pretendard text-[1.6rem] font-normal">
         {introduction}
       </p>
     </div>

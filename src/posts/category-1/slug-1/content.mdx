@@ -1,23 +1,39 @@
 ---
-title: "category 1 - slug 1 제목"
+title: "MDX 컴포넌트 스타일링 및 레이아웃"
 thumbnail: "/thumbnails/category-1/slug-1/category-1-slug-1-thumbnail.webp"
 introduction: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)."
 createdAt: "2024-06-24 오전 00:00:00"
 ---
 
-# 제목
+<h1 id="custom-id">h1 - 안녕하세요</h1>
 
-제목을 넣어봤어유
+# 단락 - h 태그 \{#custom_id}
+
+## h2 - 안녕하세요
+
+### h3 - 안녕하세요
+
+#### h4 - 안녕하세요
+
+##### h5 - 안녕하세요
+
+###### h6 - 안녕하세요
 
 <br />
 
-## 부제목
+## 설명 = p 태그
 
-부제목을 넣어봤어유
+It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
 
 <br />
 
-### 테이블
+# 구분선 = hr 태그
+
+---
+
+<br />
+
+# 테이블 = table 태그
 
 |  컬럼 1  |  컬럼 2  |
 | :------: | :------: |
@@ -25,16 +41,16 @@ createdAt: "2024-06-24 오전 00:00:00"
 
 <br />
 
-### 코드 블럭
+# 코드 블럭 = pre, code 태그
 
-```typescript
+```typescript title="재밌는 title 스타일링"
 const code = "code";
 console.log(code);
 ```
 
 <br />
 
-### 이미지
+# 이미지 = img 태그
 
 ![외부 이미지](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWKwVqM3C0wjexpPp2Tz_BjPON-hDQ-p1rHv5verWqYnzMbvYe77Rro2w5G-WZ1XnHEMw&usqp=CAU)
 
@@ -44,10 +60,15 @@ console.log(code);
   ![내부 이미지 + 링크 연결 (태그 직업 사용) ](/common/empty.webp)
 </a>
 
+# 짤 = img 태그
+
+![짤 예시](https://blog.gimm.io/wp-content/uploads/2019/02/spongebob.gif)
+
 <br />
 
-### 외부 링크
+# 외부 링크 - a 태그
 
+- [h 태그 섹션으로 이동](#custom-id)
 - (복붙 참조 - 현재 탭 - 링크 그대로) https://github.com/youngminss
 - [복붙 참조 - 현재 탭 - 링크는 숨기고 대체 텍스트로](https://github.com/youngminss)
 - <a href="https://github.com/youngminss" target="_blank">
@@ -58,7 +79,7 @@ console.log(code);
 
 <br />
 
-### 참조
+# 참조
 
 [1]: https://github.com/youngminss
 [링크 - 텍스트 링크 참조 방식 2]: https://github.com/youngminss

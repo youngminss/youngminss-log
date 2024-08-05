@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import { memo, useEffect } from "react";
 
 const Giscus = ({ className }: { className?: string }) => {
-  const { theme } = useTheme();
+  const { theme: appTheme } = useTheme();
 
   useEffect(() => {
     const $container = document.getElementById("comments-giscus-container");
@@ -23,13 +23,13 @@ const Giscus = ({ className }: { className?: string }) => {
     $script.setAttribute("data-input-position", "bottom");
     $script.setAttribute("data-lang", "ko");
     $script.setAttribute("crossorigin", "anonymous");
-    $script?.setAttribute(
-      "data-theme",
-      theme === "dark" ? "noborder_gray" : "light_high_contrast",
-    );
+
+    const giscusTheme =
+      appTheme === "dark" ? "noborder_gray" : "light_high_contrast";
+    $script.setAttribute("data-theme", giscusTheme);
 
     $container?.appendChild($script);
-  }, [theme]);
+  }, [appTheme]);
 
   return (
     <div

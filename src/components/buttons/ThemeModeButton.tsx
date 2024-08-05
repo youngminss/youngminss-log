@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Laptop2, Moon, Sun } from "lucide-react";
+import { Check, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import {
@@ -67,7 +67,7 @@ const ThemeModeButton = ({
       <DropdownMenuContent side="top" align="end">
         <ThemeModeItem themeMode="light" label="Light" Icon={Sun} />
         <ThemeModeItem themeMode="dark" label="Dark" Icon={Moon} />
-        <ThemeModeItem themeMode="system" label="System" Icon={Laptop2} />
+        {/* <ThemeModeItem themeMode="system" label="System" Icon={Laptop2} /> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );

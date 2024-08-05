@@ -6,39 +6,83 @@ import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
+import remarkUnwrapImages from "remark-unwrap-images";
+
+const components = {
+  h1: (props: any) => (
+    <h1
+      className="pb-[1.2rem] font-pretendard text-[2.8rem] font-bold"
+      {...props}
+    />
+  ),
+  h2: (props: any) => (
+    <h2
+      className="pb-[1.2rem] font-pretendard text-[2.4rem] font-bold"
+      {...props}
+    />
+  ),
+  h3: (props: any) => (
+    <h3
+      className="pb-[1.2rem] font-pretendard text-[2.0rem] font-bold"
+      {...props}
+    />
+  ),
+  h4: (props: any) => (
+    <h4
+      className="pb-[1.2rem] font-pretendard text-[1.6rem] font-bold"
+      {...props}
+    />
+  ),
+  h5: (props: any) => (
+    <h5
+      className="pb-[1.2rem] font-pretendard text-[1.6rem] font-bold"
+      {...props}
+    />
+  ),
+  h6: (props: any) => (
+    <h6
+      className="pb-[1.2rem] font-pretendard text-[1.6rem] font-bold"
+      {...props}
+    />
+  ),
+  p: (props: any) => (
+    <p className="pb-[1.6rem] font-pretendard text-[1.6rem]" {...props} />
+  ),
+  hr: (props: any) => (
+    <hr className="my-[1.6rem] border-[var(--foreground)]" {...props} />
+  ),
+  img: (props: any) => (
+    <figure className="relative mb-[1.6rem] aspect-[1.618]">
+      <Image
+        alt={props.alt || "image"}
+        layout="fill"
+        objectFit="cover"
+        placeholder="blur"
+        blurDataURL={rgbDataURL(233, 233, 233)}
+        {...props}
+      />
+    </figure>
+  ),
+};
 
 const PostBody = ({ post }: { post: TPost }) => {
-  const { thumbnail } = post;
-
   return (
     <div className="flex flex-1 flex-col">
-      {thumbnail && (
-        <div className="relative aspect-[1.618]">
-          <Image
-            className="mx-auto"
-            src={thumbnail}
-            alt="post-body-thumbnail"
-            layout="fill"
-            objectFit="cover"
-            placeholder="blur"
-            blurDataURL={rgbDataURL(233, 233, 233)}
-          />
-        </div>
-      )}
-
       <MDXRemote
+        components={{ ...components }}
         source={post.content}
         options={{
           mdxOptions: {
-            remarkPlugins: [remarkGfm, remarkBreaks],
+            remarkPlugins: [remarkUnwrapImages, remarkGfm, remarkBreaks],
             rehypePlugins: [
               [
                 rehypePrettyCode,
                 {
-                  theme: { dark: "github-dark-dimmed", light: "github-light" },
+                  theme: "slack-dark",
+                  keepBackground: true,
                 },
+                rehypeSlug,
               ],
-              rehypeSlug,
             ],
           },
         }}

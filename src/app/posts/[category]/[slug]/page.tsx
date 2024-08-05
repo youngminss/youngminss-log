@@ -14,11 +14,11 @@ const PostDetail = async ({
   });
 
   return (
-    <div className="flex flex-col">
+    <main className="mx-auto flex max-w-[64rem] flex-col px-[2rem]">
       <PostHeader post={post} />
       <PostBody post={post} />
       <PostFooter />
-    </div>
+    </main>
   );
 };
 

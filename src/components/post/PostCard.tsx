@@ -9,8 +9,8 @@ const PostCard = async ({ post }: { post: TPost }) => {
 
   return (
     <Link href={url}>
-      <div className="max-postCard:flex-col-reverse max-postCard:gap-y-[1.6rem] group flex justify-between gap-x-[1.6rem] py-[2.4rem] transition-[background-color] duration-300">
-        <div className="flex flex-col justify-between">
+      <div className="group flex justify-between gap-x-[1.6rem] py-[2.4rem] transition-[background-color] duration-300 max-postCard:flex-col-reverse max-postCard:gap-y-[1.6rem]">
+        <div className="flex flex-1 flex-col justify-between">
           <div className="flex flex-col gap-y-[1.2rem]">
             <h2 className="text-[2.4rem] font-bold">{title}</h2>
 

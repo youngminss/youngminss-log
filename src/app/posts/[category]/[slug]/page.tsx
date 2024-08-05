@@ -1,3 +1,4 @@
+import Giscus from "@/components/Comments/Giscus";
 import PostBody from "@/components/post/PostBody";
 import PostFooter from "@/components/post/PostFooter";
 import PostHeader from "@/components/post/PostHeader";
@@ -18,6 +19,7 @@ const PostDetail = async ({
       <PostHeader post={post} />
       <PostBody post={post} />
       <PostFooter />
+      <Giscus />
     </main>
   );
 };

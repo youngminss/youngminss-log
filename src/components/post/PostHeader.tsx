@@ -1,6 +1,8 @@
 import { rgbDataURL } from "@/functions/image";
 import { TPost } from "@/types/post";
+import { AUTHOR_NAME } from "@/utils/const";
 import Image from "next/image";
+import Avatars from "../ui/Avatars";
 
 const PostHeader = ({ post }: { post: TPost }) => {
   const { title, introduction, readingMinutes, thumbnail, createdAt } = post;
@@ -11,23 +13,28 @@ const PostHeader = ({ post }: { post: TPost }) => {
     <div className="flex flex-col">
       <h2 className="font-pretendard text-[3.2rem] font-bold">{title}</h2>
 
-      <div className="flex flex-col items-end">
-        <span>
+      <div className="flex items-end justify-between py-[1.6rem]">
+        <div className="flex items-center gap-x-[0.8rem]">
+          <Avatars className="w-[4.8rem]" />
+
+          <div className="flex flex-col items-start gap-y-[0.2rem]">
+            <span className="font-pretendard text-[1.2rem] font-semibold">
+              {AUTHOR_NAME}
+            </span>
+            <span>{createdDateOnly}</span>
+          </div>
+        </div>
+
+        <div>
           Reading Time :{" "}
           <span className="font-pretendard text-[1.1rem] font-semibold">
             {readingMinutes} min
           </span>
-        </span>
-        <span>
-          Created Date :{" "}
-          <span className="font-pretendard text-[1.1rem] font-semibold">
-            {createdDateOnly}
-          </span>
-        </span>
+        </div>
       </div>
 
       {thumbnail && (
-        <div className="relative my-[1.6rem] aspect-[1.618]">
+        <div className="relative aspect-[1.618]">
           <Image
             className="mx-auto"
             src={thumbnail}
@@ -40,9 +47,11 @@ const PostHeader = ({ post }: { post: TPost }) => {
         </div>
       )}
 
-      <p className="pb-[1.6rem] font-pretendard text-[1.6rem] font-normal">
-        {introduction}
-      </p>
+      {introduction && (
+        <p className="py-[1.6rem] font-pretendard text-[1.6rem] font-normal">
+          {introduction}
+        </p>
+      )}
     </div>
   );
 };

@@ -1,17 +1,25 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { memo, useEffect } from "react";
+import { memo, useEffect, useRef } from "react";
 
 const Giscus = ({ className }: { className?: string }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const { theme: appTheme } = useTheme();
+  const giscusTheme =
+    appTheme === "dark" ? "noborder_gray" : "light_high_contrast";
 
   useEffect(() => {
-    const $container = document.getElementById("comments-giscus-container");
+    if (!containerRef.current || containerRef.current.hasChildNodes()) {
+      return;
+    }
 
     const $script = document.createElement("script");
-    $script.setAttribute("id", "comment-giscus");
-    $script.setAttribute("src", "https://giscus.app/client.js");
+    $script.src = "https://giscus.app/client.js";
+    $script.id = "comment-giscus";
+    $script.crossOrigin = "anonymous";
+    $script.async = true;
     $script.setAttribute("data-repo", "youngminss/wiki-docs");
     $script.setAttribute("data-repo-id", "R_kgDOL45lkQ");
     $script.setAttribute("data-category", "Comments");
@@ -22,20 +30,28 @@ const Giscus = ({ className }: { className?: string }) => {
     $script.setAttribute("data-emit-metadata", "0");
     $script.setAttribute("data-input-position", "bottom");
     $script.setAttribute("data-lang", "ko");
-    $script.setAttribute("crossorigin", "anonymous");
-
-    const giscusTheme =
-      appTheme === "dark" ? "noborder_gray" : "light_high_contrast";
     $script.setAttribute("data-theme", giscusTheme);
 
-    $container?.appendChild($script);
-  }, [appTheme]);
+    containerRef.current.appendChild($script);
+  }, [giscusTheme]);
+
+  useEffect(() => {
+    const iframe = document.querySelector<HTMLIFrameElement>(
+      "iframe.giscus-frame",
+    );
+
+    iframe?.contentWindow?.postMessage(
+      { giscus: { setConfig: { theme: giscusTheme } } },
+      "https://giscus.app",
+    );
+  }, [giscusTheme]);
 
   return (
     <div
+      ref={containerRef}
       id="comments-giscus-container"
       className={`mt-[3.2rem] border-t border-solid border-[var(--foreground)] pt-[3.2rem] ${className}`}
-    ></div>
+    />
   );
 };
 

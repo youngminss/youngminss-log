@@ -18,7 +18,7 @@ const ThemeModeButton = ({
   onClick?: () => void;
 }) => {
   const [mounted, setMounted] = useState(false);
-  const { setTheme, theme, systemTheme } = useTheme();
+  const { setTheme, theme } = useTheme();
 
   const ThemeModeItem = ({
     themeMode,
@@ -62,7 +62,7 @@ const ThemeModeButton = ({
         asChild
         className={`rounded-[0.4rem] bg-opacity-70 p-[0.8rem] hover:bg-[--foreground] dark:hover:text-[--background] ${className}`}
       >
-        {systemTheme === "dark" ? <Moon size={40} /> : <Sun size={40} />}
+        {theme === "dark" ? <Moon size={40} /> : <Sun size={40} />}
       </DropdownMenuTrigger>
       <DropdownMenuContent side="top" align="end">
         <ThemeModeItem themeMode="light" label="Light" Icon={Sun} />

@@ -1,6 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
 // TODO: 특정 페이지 rule 에서만 노출되어야하면 수정 필요
 
@@ -8,6 +8,8 @@ const INITIAL_PROGRESS = 0;
 
 const ScrollProgress = () => {
   const pathname = usePathname();
+  const showScrollProgress =
+    pathname.startsWith(`/posts`) && pathname.split(`/`).length > 3; // TODO: Post detail 인 경우에만 노출하도록 임시 구현
 
   const [progress, setProgress] = useState(INITIAL_PROGRESS);
 
@@ -34,6 +36,10 @@ const ScrollProgress = () => {
     };
   }, []);
 
+  if (!showScrollProgress) {
+    return null;
+  }
+
   return (
     <div
       className={`absolute bottom-0 left-0 bg-[var(--foreground)]`}
@@ -45,4 +51,4 @@ const ScrollProgress = () => {
   );
 };
 
-export default ScrollProgress;
+export default memo(ScrollProgress);

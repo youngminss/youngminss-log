@@ -2,6 +2,7 @@ import { rgbDataURL } from "@/functions/image";
 import { TPost } from "@/types/post";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Image from "next/image";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import remarkBreaks from "remark-breaks";
@@ -75,13 +76,14 @@ const PostBody = ({ post }: { post: TPost }) => {
           mdxOptions: {
             remarkPlugins: [remarkUnwrapImages, remarkGfm, remarkBreaks],
             rehypePlugins: [
+              rehypeSlug,
+              rehypeAutolinkHeadings,
               [
                 rehypePrettyCode,
                 {
                   theme: "slack-dark",
                   keepBackground: true,
                 },
-                rehypeSlug,
               ],
             ],
           },

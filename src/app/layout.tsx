@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <body
-        className={`relative mx-auto max-w-[120rem] bg-[var(--background)] text-[var(--foreground)] transition-colors duration-300 ${pretendard.variable} `}
+        className={`bg-[var(--background)] text-[var(--foreground)] transition-colors duration-300 ${pretendard.variable}`}
       >
         <ThemeProvider>
           <Header />

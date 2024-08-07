@@ -68,7 +68,7 @@ const components = {
 
 const PostBody = ({ post }: { post: TPost }) => {
   return (
-    <div className="flex flex-1 flex-col">
+    <div id="post-body" className="flex flex-1 flex-col">
       <MDXRemote
         components={{ ...components }}
         source={post.content}

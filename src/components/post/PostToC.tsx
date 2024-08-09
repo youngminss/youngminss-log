@@ -30,6 +30,7 @@ const PostToC = () => {
   const isToCReady = postToCList.length !== 0;
 
   const [highlightToCItem, setHighlightToCItem] = useState<IToCItem>();
+  const [lastHighlightToCItem, setLastHighlightToCItem] = useState<IToCItem>();
 
   const handleToCItemClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
     event.preventDefault();
@@ -108,7 +109,19 @@ const PostToC = () => {
           );
         });
 
-        setHighlightToCItem(candidateHighlightToCList?.at(0));
+        if (candidateHighlightToCList.length !== 0) {
+          setLastHighlightToCItem(candidateHighlightToCList.at(0));
+        }
+
+        const isToCArea =
+          scrollY + document.documentElement.clientHeight >
+          (postToCList.at(0)?.absoluteTop ?? 0);
+
+        setHighlightToCItem(
+          isToCArea
+            ? candidateHighlightToCList?.at(0) ?? lastHighlightToCItem
+            : undefined,
+        );
       }
     };
 

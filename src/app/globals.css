@@ -6,6 +6,7 @@
   :root {
     --white: rgb(220, 220, 213);
     --black: rgb(33, 33, 33);
+    --highlight: rgb(204, 85, 0);
 
     --foreground: var(--black);
     --background: var(--white);
@@ -41,6 +42,7 @@
   .dark {
     --foreground: var(--white);
     --background: var(--black);
+    --highlight: rgb(152, 255, 152);
 
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;

@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { MouseEventHandler, useEffect, useState } from "react";
 
 // 1. 렌딩되었을때(스크롤 X)도 보이도록
-// 2. 현재 보고 있는 섹션 하이라이팅
 
 interface IToCItem {
   level: string;
@@ -79,14 +78,15 @@ const PostToC = () => {
         setPostToCList(postToCListTemp);
       }
     }
-  }, []);
+  }, [isServerSide]);
 
   useEffect(() => {
     const handleScrollForSticky = () => {
-      const newIsSticky = window.scrollY >= 300 ? true : false;
-      setIsSticky(newIsSticky);
+      setIsSticky(window.scrollY >= 300);
       setScrollY(window.scrollY);
     };
+
+    handleScrollForSticky();
 
     if (!isServerSide) {
       window.addEventListener("scroll", handleScrollForSticky);
@@ -95,7 +95,7 @@ const PostToC = () => {
     return () => {
       window.removeEventListener("scroll", handleScrollForSticky);
     };
-  }, []);
+  }, [isServerSide]);
 
   useEffect(() => {
     const handleScrollForHighlight = () => {
@@ -125,13 +125,8 @@ const PostToC = () => {
       }
     };
 
-    window.addEventListener("scroll", handleScrollForHighlight);
-
-    return () => {
-      window.addEventListener("scroll", handleScrollForHighlight);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrollY]);
+    handleScrollForHighlight();
+  }, [isToCReady, scrollY]);
 
   return (
     <aside

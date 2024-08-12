@@ -12,7 +12,8 @@ interface IToCItem {
   absoluteTop: number;
 }
 
-const levelIndentClassNameMap: { [key: string]: string } = {
+const SCROLL_FOR_TOC_STICKY = 300;
+const LEVEL_INDENT_CLASS_NAME_MAP: { [key: string]: string } = {
   H1: "p-0",
   H2: "p-2",
   H3: "p-4",
@@ -22,8 +23,10 @@ const PostToC = () => {
   const isServerSide = typeof window === "undefined";
 
   const router = useRouter();
+
   const [scrollY, setScrollY] = useState(isServerSide ? 0 : window.scrollY);
   const [isSticky, setIsSticky] = useState<boolean>();
+  const [isPostToCEnd, setIsPostToCEnd] = useState<boolean>();
 
   const [postToCList, setPostToCList] = useState<IToCItem[]>([]);
   const isToCReady = postToCList.length !== 0;
@@ -36,15 +39,16 @@ const PostToC = () => {
 
     const decodedHashId = decodeURIComponent(event.currentTarget.hash);
     const scrollTargetId = decodedHashId.replace(/.*\#/, "");
-    const scrollTarget = document.getElementById(scrollTargetId);
+    const $scrollTarget = document.getElementById(scrollTargetId);
+    const $header = document.getElementById("blog-header");
 
-    if (scrollTarget) {
+    if ($scrollTarget) {
       // 1. change url hash
       router.push(decodedHashId, { scroll: false });
 
       // 2. smooth scroll target section
       window.scrollTo({
-        top: scrollTarget.offsetTop - 64, // subtract header height
+        top: $scrollTarget.offsetTop - ($header?.offsetHeight ?? 0),
         behavior: "smooth",
       });
     }
@@ -81,24 +85,27 @@ const PostToC = () => {
   }, [isServerSide]);
 
   useEffect(() => {
-    const handleScrollForSticky = () => {
-      setIsSticky(window.scrollY >= 300);
+    const handleScroll = () => {
       setScrollY(window.scrollY);
     };
 
-    handleScrollForSticky();
+    handleScroll();
 
     if (!isServerSide) {
-      window.addEventListener("scroll", handleScrollForSticky);
+      window.addEventListener("scroll", handleScroll);
     }
 
     return () => {
-      window.removeEventListener("scroll", handleScrollForSticky);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [isServerSide]);
 
   useEffect(() => {
-    const handleScrollForHighlight = () => {
+    const handleToCSticky = () => {
+      setIsSticky(window.scrollY >= SCROLL_FOR_TOC_STICKY);
+    };
+
+    const handleToCHighlight = () => {
       if (postToCList.length !== 0) {
         const candidateHighlightToCList = postToCList.filter((postToCItem) => {
           const { absoluteTop } = postToCItem;
@@ -125,12 +132,33 @@ const PostToC = () => {
       }
     };
 
-    handleScrollForHighlight();
+    const handlePostToCEnd = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const $commentsSection = document.getElementById(
+        "comments-giscus-container",
+      );
+
+      if ($commentsSection) {
+        const commentsSectionAbsoluteTop =
+          $commentsSection?.getBoundingClientRect().top + scrollTop;
+        const offset = document.documentElement.clientHeight / 2;
+
+        const isPostToCEnd =
+          scrollY + document.documentElement.clientHeight >
+          commentsSectionAbsoluteTop + offset;
+
+        setIsPostToCEnd(isPostToCEnd);
+      }
+    };
+
+    handleToCSticky();
+    handleToCHighlight();
+    handlePostToCEnd();
   }, [isToCReady, scrollY]);
 
   return (
     <aside
-      className={`${isToCReady ? `opacity-100 transition-opacity duration-300` : `opacity-0`} ${isSticky ? `fixed top-[12rem]` : `absolute top-[30rem] mt-[12rem]`} right-[calc(50%_-_32rem_-_20rem_-_3rem)] max-pc:hidden`}
+      className={`transition-opacity duration-300 ${isToCReady && !isPostToCEnd ? `opacity-100` : `opacity-0`} ${isSticky ? `fixed top-[12rem]` : `absolute top-[30rem] mt-[12rem]`} right-[calc(50%_-_32rem_-_20rem_-_3rem)] max-pc:hidden`}
     >
       <div className="relative !w-[20rem] rounded-[0.8rem] border-[0.2rem] border-solid border-[var(--foreground)] px-[1.2rem] py-[0.8rem]">
         <div className="absolute right-0 top-0 flex -translate-y-1/2 translate-x-1/2 items-center justify-center bg-[var(--background)] pl-[0.4rem] text-[3rem]">
@@ -144,7 +172,7 @@ const PostToC = () => {
           return (
             <div
               key={index}
-              className={`${levelIndentClassNameMap[level]} ${isHighlight ? `font-semibold text-[var(--highlight)]` : ``} text-[var(--foreground) py-[0.4rem] text-[1.2rem]`}
+              className={`${LEVEL_INDENT_CLASS_NAME_MAP[level]} ${isHighlight ? `font-semibold text-[var(--highlight)]` : ``} text-[var(--foreground) py-[0.4rem] text-[1.2rem]`}
             >
               <a href={`#${href}`} onClick={handleToCItemClick}>
                 {text}

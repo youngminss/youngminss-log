@@ -6,7 +6,7 @@
   :root {
     --white: rgb(220, 220, 213);
     --black: rgb(33, 33, 33);
-    --highlight: rgb(204, 85, 0);
+    --highlight: rgb(39, 3, 198);
 
     --foreground: var(--black);
     --background: var(--white);

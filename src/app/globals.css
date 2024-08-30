@@ -138,7 +138,7 @@ html {
 
 /* for. code block */
 figure[data-rehype-pretty-code-figure] {
-  @apply overflow-clip rounded-[0.8rem] border border-solid;
+  @apply mb-[1.2rem] overflow-clip rounded-[0.8rem] border border-solid;
 }
 
 figure[data-rehype-pretty-code-figure]

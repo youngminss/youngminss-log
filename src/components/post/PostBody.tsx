@@ -1,5 +1,6 @@
 import { rgbDataURL } from "@/functions/image";
 import { TPost } from "@/types/post";
+// import { transformerCopyButton } from "@rehype-pretty/transformers";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Image from "next/image";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
@@ -77,6 +78,12 @@ const prettyCodeOptions: Options = {
     dark: "slack-dark",
     light: "slack-dark",
   },
+  // transformers: [
+  //   transformerCopyButton({
+  //     visibility: "always",
+  //     feedbackDuration: 3000,
+  //   }),
+  // ],
 };
 
 const PostBody = ({ post }: { post: TPost }) => {
@@ -89,9 +96,9 @@ const PostBody = ({ post }: { post: TPost }) => {
           mdxOptions: {
             remarkPlugins: [remarkUnwrapImages, remarkGfm, remarkBreaks],
             rehypePlugins: [
-              [rehypePrettyCode, prettyCodeOptions],
               rehypeSlug,
               rehypeAutolinkHeadings,
+              [rehypePrettyCode, prettyCodeOptions],
             ],
           },
         }}

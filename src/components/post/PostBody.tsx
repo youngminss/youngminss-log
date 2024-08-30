@@ -1,9 +1,10 @@
 import { rgbDataURL } from "@/functions/image";
 import { TPost } from "@/types/post";
+// import { transformerCopyButton } from "@rehype-pretty/transformers";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Image from "next/image";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypePrettyCode from "rehype-pretty-code";
+import rehypePrettyCode, { Options } from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
@@ -64,11 +65,30 @@ const components = {
       />
     </figure>
   ),
+  ul: (props: any) => <ul className="list-inside list-disc" {...props} />,
+  li: (props: any) => (
+    <li className="font-pretendard text-[1.6rem] leading-[150%]" {...props} />
+  ),
+  blockquote: (props: any) => <blockquote className="mb-[1.6rem]" {...props} />,
+};
+
+const prettyCodeOptions: Options = {
+  keepBackground: true,
+  theme: {
+    dark: "slack-dark",
+    light: "slack-dark",
+  },
+  // transformers: [
+  //   transformerCopyButton({
+  //     visibility: "always",
+  //     feedbackDuration: 3000,
+  //   }),
+  // ],
 };
 
 const PostBody = ({ post }: { post: TPost }) => {
   return (
-    <div className="flex flex-1 flex-col">
+    <div id="post-body" className="flex flex-1 flex-col">
       <MDXRemote
         components={{ ...components }}
         source={post.content}
@@ -78,13 +98,7 @@ const PostBody = ({ post }: { post: TPost }) => {
             rehypePlugins: [
               rehypeSlug,
               rehypeAutolinkHeadings,
-              [
-                rehypePrettyCode,
-                {
-                  theme: "slack-dark",
-                  keepBackground: true,
-                },
-              ],
+              [rehypePrettyCode, prettyCodeOptions],
             ],
           },
         }}

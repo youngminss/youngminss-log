@@ -2,6 +2,7 @@ import Giscus from "@/components/Comments/Giscus";
 import PostBody from "@/components/post/PostBody";
 import PostFooter from "@/components/post/PostFooter";
 import PostHeader from "@/components/post/PostHeader";
+import PostToC from "@/components/post/PostToC";
 import { getPostDetail } from "@/functions/post";
 
 const PostDetail = async ({
@@ -15,11 +16,15 @@ const PostDetail = async ({
   });
 
   return (
-    <main className="mx-auto flex max-w-[64rem] flex-col px-[2rem]">
-      <PostHeader post={post} />
-      <PostBody post={post} />
-      <PostFooter />
-      <Giscus />
+    <main>
+      <div className="mx-auto flex max-w-[64rem] flex-col px-[2rem]">
+        <PostHeader post={post} />
+        <PostBody post={post} />
+        <PostFooter />
+        <Giscus />
+      </div>
+
+      <PostToC />
     </main>
   );
 };

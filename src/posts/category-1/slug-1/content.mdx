@@ -5,17 +5,23 @@ introduction: "It is a long established fact that a reader will be distracted by
 createdAt: "2024-06-24 오전 00:00:00"
 ---
 
+It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+
+It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+
+It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+
 # 단락 - h 태그
+
+It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
 
 ## h2 - 안녕하세요
 
+It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+
 ### h3 - 안녕하세요
 
-#### h4 - 안녕하세요
-
-##### h5 - 안녕하세요
-
-###### h6 - 안녕하세요
+It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
 
 <br />
 
@@ -41,10 +47,140 @@ It is a long established fact that a reader will be distracted by the readable c
 
 # 코드 블럭 = pre, code 태그
 
-```typescript title="재밌는 title 스타일링"
-const code = "code";
+```typescript showLineNumbers title="ts - showLineNumbers" caption="showLineNumbers"
+const stringVar = "var";
+const intBar = 100;
+const boolBar = true;
+const undefinedVar = undefined;
+const nullBar = null;
+
+const constFuncVar = () => {
+  return stringVar;
+}
+
+function functionFuncVar() {
+  return intBar;
+}
+
+export const exportConstFuncVar = () => boolBar;
+
+default export const defaultExportConstFuncVar = () => undefinedVar;
+
 console.log(code);
+
+// 주석
 ```
+
+<br />
+
+```typescript showLineNumbers{3} title="showLineNumbers{n}" caption="showLineNumber 3 부터 시작"
+const stringVar = "var";
+const intBar = 100;
+const boolBar = true;
+const undefinedVar = undefined;
+const nullBar = null;
+
+const constFuncVar = () => {
+  return stringVar;
+}
+
+function functionFuncVar() {
+  return intBar;
+}
+
+export const exportConstFuncVar = () => boolBar;
+
+default export const defaultExportConstFuncVar = () => undefinedVar;
+
+console.log(code);
+
+// 주석
+```
+
+<br />
+
+```typescript showLineNumbers {1-2, 11, 21-22} title="line highlight" caption="{1-2, 11, 21-22}"
+const stringVar = "var";
+const intBar = 100;
+const boolBar = true;
+const undefinedVar = undefined;
+const nullBar = null;
+
+const constFuncVar = () => {
+  return stringVar;
+}
+
+function functionFuncVar() {
+  return intBar;
+}
+
+export const exportConstFuncVar = () => boolBar;
+
+default export const defaultExportConstFuncVar = () => undefinedVar;
+
+console.log(code);
+
+// 주석
+```
+
+<br />
+
+```typescript showLineNumbers /nullBarR/#r /nullBarG/#g /nullBarB/#b  title="unit highlight" caption="/nullBarR/#r /nullBarG/#g /nullBarB/#b"
+const stringVar = "var";
+const intBar = 100;
+const boolBar = true;
+const undefinedVar = undefined;
+const nullBar = null;
+const nullBarR = null;
+const nullBarG = null;
+const nullBarB = null;
+
+const constFuncVar = () => {
+  return stringVar;
+}
+
+function functionFuncVar() {
+  return intBar;
+}
+
+export const exportConstFuncVar = () => boolBar;
+
+default export const defaultExportConstFuncVar = () => undefinedVar;
+
+console.log(code);
+
+// 주석
+```
+
+<br />
+
+```markdown title="markdown"
+## hi
+
+hi
+```
+
+<br />
+
+```json title="json"
+{
+  "a": "a"
+}
+```
+
+<br />
+
+```plainText title="plainText"
+{
+  "a": "a"
+}
+```
+
+<br />
+
+# 인용글
+
+> 인라인 `<code>{:html}` `const block{:js}` 에도 `highlight{:css}`가 됩니다. 안녕하세요 블로그 개발을 `직접`해보니 재밌고 `새로 알게되는 것`들이 많네요 ! 어려분도 직접 블로그 개발해보세요 ㅎㅎ
 
 <br />
 
@@ -53,6 +189,12 @@ console.log(code);
 ![외부 이미지](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWKwVqM3C0wjexpPp2Tz_BjPON-hDQ-p1rHv5verWqYnzMbvYe77Rro2w5G-WZ1XnHEMw&usqp=CAU)
 
 ![내부 이미지](/common/empty.webp)
+
+It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+
+It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+
+It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
 
 <a href="https://github.com/youngminss" target="_blank">
   ![내부 이미지 + 링크 연결 (태그 직업 사용) ](/common/empty.webp)
@@ -76,8 +218,6 @@ console.log(code);
 - [링크 - 참조 방식 1][1] (텍스트에 대한 인덱스 설정후 하단에 인덱스에 대한 링크 매핑 필요)
 
 <br />
-
-# 참조
 
 [1]: https://github.com/youngminss
 [링크 - 텍스트 링크 참조 방식 2]: https://github.com/youngminss

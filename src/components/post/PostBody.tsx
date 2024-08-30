@@ -3,7 +3,7 @@ import { TPost } from "@/types/post";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Image from "next/image";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypePrettyCode from "rehype-pretty-code";
+import rehypePrettyCode, { Options } from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
@@ -64,6 +64,19 @@ const components = {
       />
     </figure>
   ),
+  ul: (props: any) => <ul className="list-inside list-disc" {...props} />,
+  li: (props: any) => (
+    <li className="font-pretendard text-[1.6rem] leading-[150%]" {...props} />
+  ),
+  blockquote: (props: any) => <blockquote className="mb-[1.6rem]" {...props} />,
+};
+
+const prettyCodeOptions: Options = {
+  keepBackground: true,
+  theme: {
+    dark: "slack-dark",
+    light: "slack-dark",
+  },
 };
 
 const PostBody = ({ post }: { post: TPost }) => {
@@ -76,15 +89,9 @@ const PostBody = ({ post }: { post: TPost }) => {
           mdxOptions: {
             remarkPlugins: [remarkUnwrapImages, remarkGfm, remarkBreaks],
             rehypePlugins: [
+              [rehypePrettyCode, prettyCodeOptions],
               rehypeSlug,
               rehypeAutolinkHeadings,
-              [
-                rehypePrettyCode,
-                {
-                  theme: "slack-dark",
-                  keepBackground: true,
-                },
-              ],
             ],
           },
         }}

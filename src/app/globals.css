@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  * {
+    @apply border-border;
+  }
+
   :root {
     --white: rgb(220, 220, 213);
     --black: rgb(33, 33, 33);
@@ -37,6 +41,29 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
+
+    /* for. code-block */
+    figure[data-rehype-pretty-code-figure] {
+      @apply border-[var(--foreground)];
+    }
+
+    figure[data-rehype-pretty-code-figure] pre {
+      @apply bg-[var(--shiki-light-bg)];
+    }
+
+    code[data-theme*=" "],
+    code[data-theme*=" "] span {
+      color: var(--shiki-light);
+    }
+
+    blockquote p {
+      background-color: rgba(115, 83, 255, 0.2);
+    }
+
+    :not(pre) > p > code {
+      border-color: rgba(115, 83, 255, 0.4);
+      background-color: rgba(204, 162, 255, 0.6);
+    }
   }
 
   .dark {
@@ -68,12 +95,29 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
-  }
-}
 
-@layer base {
-  * {
-    @apply border-border;
+    /* for. code-block */
+    figure[data-rehype-pretty-code-figure] {
+      @apply border-[var(--foreground)];
+    }
+
+    figure[data-rehype-pretty-code-figure] pre {
+      @apply bg-[var(--shiki-dark-bg)];
+    }
+
+    code[data-theme*=" "],
+    code[data-theme*=" "] span {
+      color: var(--shiki-dark);
+    }
+
+    blockquote p {
+      background-color: rgba(152, 255, 152, 0.2);
+    }
+
+    :not(pre) > p > code {
+      border-color: rgba(152, 255, 152, 0.4);
+      background-color: rgba(23, 105, 23, 0.6);
+    }
   }
 }
 
@@ -90,4 +134,110 @@ html {
 .custom-blur {
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
+}
+
+/* for. code block */
+figure[data-rehype-pretty-code-figure] {
+  @apply overflow-clip rounded-[0.8rem] border border-solid;
+}
+
+figure[data-rehype-pretty-code-figure]
+  figcaption[data-rehype-pretty-code-title] {
+  @apply border-b border-solid border-[var(--foreground)] px-[1.6rem] py-[1rem] text-[1.4rem] font-semibold;
+}
+
+figure[data-rehype-pretty-code-figure] div[data-rehype-pretty-code-title] {
+  @apply border-b border-solid border-[var(--foreground)] px-[1.6rem] py-[1rem] text-[1.4rem] font-semibold;
+}
+
+figure[data-rehype-pretty-code-figure] pre {
+  overflow-x: auto;
+  scrollbar-width: none;
+  @apply bg-[var-] py-[1.6rem];
+}
+
+figure[data-rehype-pretty-code-figure] pre::-webkit-scrollbar {
+  scrollbar-width: none;
+}
+
+figure[data-rehype-pretty-code-figure] pre [data-line] {
+  @apply px-[1.6rem] text-[1.4rem];
+}
+
+figure[data-rehype-pretty-code-figure]
+  figcaption[data-rehype-pretty-code-caption] {
+  @apply border-t border-solid border-[var(--foreground)] px-[1.6rem] py-[1rem] text-[1.4rem] font-semibold;
+}
+
+figure[data-rehype-pretty-code-figure] div[data-rehype-pretty-code-caption] {
+  @apply border-t border-solid border-[var(--foreground)] px-[1.6rem] py-[1rem] text-[1.4rem] font-semibold;
+}
+
+/* Fenced Code block - line number style */
+code[data-line-numbers] {
+  counter-reset: line;
+}
+
+code[data-line-numbers] > span[data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+
+  display: inline-block;
+  width: 0.75rem;
+  margin-right: 1.6rem;
+  text-align: right;
+  color: gray;
+}
+
+code[data-line-numbers-max-digits="2"] > span[data-line]::before {
+  width: 1.6rem;
+}
+
+code[data-line-numbers-max-digits="3"] > span[data-line]::before {
+  width: 2.6rem;
+}
+
+code span[data-highlighted-line] {
+  @apply border-y-0 border-l-2 border-blue-400 bg-indigo-400 bg-opacity-10 pl-[calc(0.5rem-2px)] dark:border-blue-500 dark:bg-slate-700 md:pl-[calc(1rem_-_2px)];
+}
+
+/* Fenced Code block - word highlight */
+mark[data-highlighted-chars] {
+  @apply bg-teal-400 bg-opacity-25;
+}
+
+mark[data-chars-id="r"] {
+  @apply bg-red-400 bg-opacity-25;
+}
+
+mark[data-chars-id="g"] {
+  @apply bg-green-400 bg-opacity-25;
+}
+
+mark[data-chars-id="b"] {
+  @apply bg-blue-400 bg-opacity-25;
+}
+
+/* blockquote */
+blockquote {
+  @apply flex items-center border-l-[0.4rem] border-solid border-[var(--foreground)];
+}
+
+blockquote > p {
+  @apply flex flex-1 flex-wrap items-center gap-x-[0.4rem] gap-y-[0.4rem] !px-[1.6rem] !py-[0.8rem];
+}
+
+/* Inline code block backtick display: none */
+:not(pre) > code::before,
+:not(pre) > code::after {
+  display: none;
+}
+
+/* inline code block style */
+:not(pre) > span[data-rehype-pretty-code-figure] > code {
+  @apply mx-[0.2rem] rounded border border-[var(--shiki-dark-bg)] bg-[var(--shiki-dark-bg)] px-[0.4rem] py-[0.2rem] align-middle font-mono text-[1.6rem];
+}
+
+:not(pre) > p > code {
+  @apply mx-[0.2rem] rounded border px-[0.4rem] py-[0.1rem] font-pretendard text-[1.6rem] font-semibold;
 }

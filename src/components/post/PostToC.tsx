@@ -1,9 +1,8 @@
 "use client";
 
+import { CircleX } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { MouseEventHandler, useEffect, useState } from "react";
-
-// 1. 렌딩되었을때(스크롤 X)도 보이도록
 
 interface IToCItem {
   level: string;
@@ -19,7 +18,15 @@ const LEVEL_INDENT_CLASS_NAME_MAP: { [key: string]: string } = {
   H3: "p-4",
 };
 
-const PostToC = () => {
+const PostToC = ({
+  className,
+  isPinVisible = true,
+  onCloseButtonClick: handleCloseButtonClick,
+}: {
+  className?: string;
+  isPinVisible?: boolean;
+  onCloseButtonClick?: () => void;
+}) => {
   const isServerSide = typeof window === "undefined";
 
   const router = useRouter();
@@ -158,28 +165,40 @@ const PostToC = () => {
 
   return (
     <aside
-      className={`transition-opacity duration-300 ${isToCReady && !isPostToCEnd ? `opacity-100` : `opacity-0`} ${isSticky ? `fixed top-[12rem]` : `absolute top-[30rem] mt-[12rem]`} right-[calc(50%_-_32rem_-_20rem_-_3rem)] max-pc:hidden`}
+      className={`${className ?? `transition-opacity duration-300 ${isToCReady && !isPostToCEnd ? `opacity-100` : `opacity-0`} ${isSticky ? `fixed top-[12rem]` : `absolute top-[30rem] mt-[12rem]`} right-[calc(50%_-_32rem_-_20rem_-_3rem)] max-pc:hidden`}`}
     >
       <div className="relative !w-[20rem] rounded-[0.8rem] border-[0.2rem] border-solid border-[var(--foreground)] px-[1.2rem] py-[0.8rem]">
-        <div className="absolute right-0 top-0 flex -translate-y-1/2 translate-x-1/2 items-center justify-center bg-[var(--background)] pl-[0.4rem] text-[3rem]">
-          📌
+        {isPinVisible && (
+          <div className="absolute right-0 top-0 flex -translate-y-1/2 translate-x-1/2 items-center justify-center bg-[var(--background)] pl-[0.4rem] text-[3rem] transition-none">
+            📌
+          </div>
+        )}
+
+        <div className="scroll max-pc:max-h-[32rem] max-pc:overflow-y-scroll pc:max-h-[60rem]">
+          {[...postToCList, ...postToCList].map((postToCItem, index) => {
+            const { level, text, href } = postToCItem;
+
+            const isHighlight = href === highlightToCItem?.href;
+
+            return (
+              <div
+                key={index}
+                className={`${LEVEL_INDENT_CLASS_NAME_MAP[level]} ${isHighlight ? `font-semibold text-[var(--highlight)]` : ``} text-[var(--foreground) py-[0.4rem] text-[1.2rem]`}
+              >
+                <a href={`#${href}`} onClick={handleToCItemClick}>
+                  {text}
+                </a>
+              </div>
+            );
+          })}
         </div>
-        {postToCList.map((postToCItem, index) => {
-          const { level, text, href } = postToCItem;
 
-          const isHighlight = href === highlightToCItem?.href;
-
-          return (
-            <div
-              key={index}
-              className={`${LEVEL_INDENT_CLASS_NAME_MAP[level]} ${isHighlight ? `font-semibold text-[var(--highlight)]` : ``} text-[var(--foreground) py-[0.4rem] text-[1.2rem]`}
-            >
-              <a href={`#${href}`} onClick={handleToCItemClick}>
-                {text}
-              </a>
-            </div>
-          );
-        })}
+        {handleCloseButtonClick && (
+          <CircleX
+            className="mx-auto mt-[0.4rem] translate-x-[0.4rem]"
+            onClick={handleCloseButtonClick}
+          />
+        )}
       </div>
     </aside>
   );

@@ -175,7 +175,7 @@ const PostToC = ({
         )}
 
         <div className="scroll max-pc:max-h-[32rem] max-pc:overflow-y-scroll pc:max-h-[60rem]">
-          {[...postToCList, ...postToCList].map((postToCItem, index) => {
+          {postToCList.map((postToCItem, index) => {
             const { level, text, href } = postToCItem;
 
             const isHighlight = href === highlightToCItem?.href;

@@ -7,6 +7,8 @@ export async function generateStaticParams() {
 }
 
 const CategoryPage = async ({ category }: { category: string }) => {
+  console.log(category);
+
   return <></>;
 };
 

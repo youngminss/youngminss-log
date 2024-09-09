@@ -12,9 +12,11 @@ import {
 
 const ThemeModeButton = ({
   className = "",
+  type = "toggle",
   onClick,
 }: {
   className?: string;
+  type: "toggle" | "dropdown";
   onClick?: () => void;
 }) => {
   const [mounted, setMounted] = useState(false);
@@ -56,11 +58,31 @@ const ThemeModeButton = ({
     return null;
   }
 
+  if (type === "toggle") {
+    return (
+      <div
+        onClick={() => {
+          setTheme(theme === "dark" ? "light" : "dark");
+
+          if (onClick) {
+            onClick();
+          }
+        }}
+      >
+        {theme === "dark" ? (
+          <Moon size={40} className={className} />
+        ) : (
+          <Sun size={40} className={className} />
+        )}
+      </div>
+    );
+  }
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger
         asChild
-        className={`rounded-[0.4rem] bg-opacity-70 p-[0.8rem] hover:bg-[--foreground] dark:hover:text-[--background] ${className}`}
+        className={`rounded-[0.4rem] bg-opacity-70 p-[0.8rem] ${className}`}
       >
         {theme === "dark" ? <Moon size={40} /> : <Sun size={40} />}
       </DropdownMenuTrigger>

@@ -1,29 +1,68 @@
 "use client";
 
-import { Grip } from "lucide-react";
-import { useState } from "react";
+import { Grip, ListChecksIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import ScrollToTopButton from "../buttons/ScrollToTopButton";
-import ThemeMode from "../buttons/ThemeModeButton";
+import ThemeModeButton from "../buttons/ThemeModeButton";
+import PostToC from "../post/PostToC";
+
+const pathnameRegexForPostToCVisualization =
+  /^\/posts\/[^\/]+\/[^\/]+(\/[^\/]*)*$/;
+
 const FloatingActions = () => {
+  const pathname = usePathname();
+
   const [open, setOpen] = useState(false);
 
+  const [isPostTocOn, setIsPostTocOn] = useState(false);
+  const isPostToCVisible = pathnameRegexForPostToCVisualization.test(pathname);
+
+  useEffect(() => {
+    if (open) {
+      setOpen(false);
+    }
+
+    if (isPostTocOn) {
+      setIsPostTocOn(false);
+    }
+  }, [pathname]);
+
   return (
-    <div className="fixed bottom-[2.8rem] right-[6.8rem] transition-all">
+    <div className="fixed bottom-[2rem] right-[2rem]">
+      <ScrollToTopButton
+        className={`absolute bottom-0 right-[4.8rem] z-[3] cursor-pointer border-[0.15rem] border-solid border-[var(--foreground)] bg-[var(--background)] transition-[transform] duration-100 active:scale-[0.9]`}
+      />
+
       <Grip
         size={40}
-        className="absolute bottom-0 z-[3] cursor-pointer rounded-[0.4rem] border-[0.15rem] border-solid border-[--foreground] bg-[var(--background)] p-[0.8rem] hover:bg-[var(--foreground)] hover:text-[var(--background)]"
-        onClick={() => setOpen(!open)}
+        className="absolute bottom-0 right-0 z-[3] cursor-pointer rounded-[0.4rem] border-[0.15rem] border-solid border-[--foreground] bg-[var(--background)] p-[0.8rem]"
+        onClick={() => {
+          setOpen((prev) => !prev);
+          setIsPostTocOn(false);
+        }}
       />
 
-      <ScrollToTopButton
-        className={`absolute z-[2] cursor-pointer border-[0.15rem] border-solid border-[var(--foreground)] duration-200 hover:bg-[var(--foreground)] hover:text-[var(--background)] ${open ? "bottom-[4.8rem] bg-[var(--background)] pc:bg-transparent" : "bottom-0"}`}
-        onClick={() => setOpen(!open)}
+      <ThemeModeButton
+        type="toggle"
+        className={`absolute bottom-0 right-0 z-[2] rounded-[0.4rem] border-[0.15rem] border-solid border-[--foreground] bg-[var(--background)] p-[0.8rem] transition-[transform] duration-100 will-change-transform ${open ? `-translate-y-[4.8rem]` : `translate-y-0`} cursor-pointer active:scale-[0.9]`}
       />
 
-      <ThemeMode
-        className={`absolute z-[1] cursor-pointer border-[0.15rem] border-solid border-[var(--foreground)] duration-200 hover:bg-[var(--foreground)] hover:text-[var(--background)] ${open ? "bottom-[9.6rem] bg-[var(--background)] pc:bg-transparent" : "bottom-0"}`}
-        onClick={() => setOpen(!open)}
-      />
+      {isPostToCVisible && (
+        <>
+          <ListChecksIcon
+            className={`round absolute bottom-0 right-0 z-[1] rounded-[0.4rem] border-[0.15rem] border-solid border-[--foreground] bg-[var(--background)] p-[0.8rem] transition-[transform] duration-100 will-change-transform pc:hidden ${open ? `-translate-y-[9.6rem]` : `translate-y-0`} cursor-pointer active:scale-[0.9]`}
+            size={40}
+            onClick={() => setIsPostTocOn((prev) => !prev)}
+          />
+
+          <PostToC
+            className={`rounded- fixed right-0 top-[10rem] rounded-[0.8rem] bg-[var(--background)] transition-[transform] duration-300 will-change-transform pc:!hidden ${isPostTocOn ? `-translate-x-[2rem]` : `translate-x-full`}`}
+            isPinVisible={false}
+            onCloseButtonClick={() => setIsPostTocOn(false)}
+          />
+        </>
+      )}
     </div>
   );
 };

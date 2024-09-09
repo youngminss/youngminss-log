@@ -1,5 +1,4 @@
-import { GITHUB_PROFILE } from "@/utils/const";
-import { Book, Github } from "lucide-react";
+import { Book } from "lucide-react";
 import Link from "next/link";
 import ScrollProgress from "./ScrollProgress";
 
@@ -20,15 +19,7 @@ const Header = () => {
               <Link href="/posts">
                 <Book
                   size={40}
-                  className="rounded-[0.4rem] bg-opacity-80 p-[0.8rem] hover:bg-[--foreground] hover:text-[--background]"
-                />
-              </Link>
-            </li>
-            <li>
-              <Link href={GITHUB_PROFILE} target="_blank">
-                <Github
-                  size={40}
-                  className="rounded-[0.4rem] bg-opacity-80 p-[0.8rem] hover:bg-[--foreground] hover:text-[--background]"
+                  className="rounded-[0.4rem] bg-opacity-80 p-[0.4rem] transition-[transform] duration-100 will-change-transform active:scale-[0.8]"
                 />
               </Link>
             </li>

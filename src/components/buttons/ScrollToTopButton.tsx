@@ -26,7 +26,7 @@ const ScrollToTopButton = ({
   return (
     <ArrowUp
       size={40}
-      className={`rounded-[0.4rem] bg-opacity-70 p-[0.8rem] hover:bg-[--foreground] dark:hover:text-[--background] ${className}`}
+      className={`rounded-[0.4rem] bg-opacity-70 p-[0.8rem] ${className}`}
       onClick={handleScrollToTopClick}
     />
   );

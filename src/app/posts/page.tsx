@@ -12,8 +12,8 @@ const Posts = async () => {
   );
 
   return (
-    <main className="mx-auto min-h-[calc(100vh_-_12rem)] max-w-[64rem] px-[2rem]">
-      <div className="flex items-center gap-x-[1.6rem] border-b border-solid border-[var(--foreground)] py-[1.6rem] pc:py-[2.4rem]">
+    <main className="mx-auto min-h-[calc(100vh_-_18.9rem)] max-w-[64rem]">
+      <div className="mx-[1.6rem] mb-[1.6rem] flex items-center gap-x-[1.6rem] border-b-[0.15rem] border-solid border-[var(--foreground)] py-[1.6rem] pc:mb-[2.4rem] pc:py-[2.4rem]">
         <Avatars
           href={GITHUB_PROFILE}
           target="_blank"
@@ -27,7 +27,7 @@ const Posts = async () => {
         </div>
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col max-postCard:gap-y-[1.6rem]">
         {postList.map((post) => {
           const { category, slug } = post;
           return <PostCard key={`${category}_${slug}_postCard`} post={post} />;

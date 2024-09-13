@@ -1,17 +1,20 @@
 import { rgbDataURL } from "@/functions/image";
 import Image from "next/image";
 import Link from "next/link";
+import { HTMLAttributeAnchorTarget } from "react";
 
 const Avatars = ({
   className = "",
   src = "/images/profile.webp",
   alt = "youngmin's profile",
   href,
+  target,
 }: {
   className?: string;
   src?: string;
   alt?: string;
   href?: string;
+  target?: HTMLAttributeAnchorTarget;
 }) => {
   const containerClassName = `relative aspect-square overflow-clip rounded-full ${className}`;
 
@@ -31,7 +34,7 @@ const Avatars = ({
   }
 
   return (
-    <Link href={href} className={containerClassName}>
+    <Link href={href} target={target} className={containerClassName}>
       {avatars}
     </Link>
   );

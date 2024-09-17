@@ -7,6 +7,7 @@ export type TPost = {
   content: string;
   title: string;
   introduction?: string;
+  keywords?: string[];
   thumbnail?: string;
   createdAt: string;
 };

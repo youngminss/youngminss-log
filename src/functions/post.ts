@@ -36,14 +36,18 @@ const parsePostDetail = async (postPath: string): Promise<TPostDetail> => {
   const dateString = dayjs(grayMatter.date)
     .locale("ko")
     .format("YYYY년 MM월 DD일");
+  const keywords = data["keywords"]
+    ?.split(",")
+    .map((keyword: string) => keyword.trim());
 
   return {
+    ...grayMatter,
+    title: data["title"],
     dateString,
     readingMinutes,
     content,
-    title: data["title"],
+    keywords,
     createdAt: data["createdAt"],
-    ...grayMatter,
   };
 };
 

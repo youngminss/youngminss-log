@@ -8,7 +8,7 @@ import ThemeModeButton from "../buttons/ThemeModeButton";
 import PostToC from "../post/PostToC";
 
 const pathnameRegexForPostToCVisualization =
-  /^\/posts\/[^\/]+\/[^\/]+(\/[^\/]*)*$/;
+  /^\/blog\/[^\/]+\/[^\/]+(\/[^\/]*)*$/;
 
 const FloatingActions = () => {
   const pathname = usePathname();

@@ -6,9 +6,11 @@ export async function generateStaticParams() {
   return paramList;
 }
 
-const CategoryPage = async ({ category }: { category: string }) => {
-  console.log(category);
-
+const CategoryPage = async ({
+  params: { category },
+}: {
+  params: { category: string };
+}) => {
   return <></>;
 };
 

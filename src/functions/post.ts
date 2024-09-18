@@ -6,7 +6,7 @@ import matter from "gray-matter";
 import path from "path";
 import readingTime from "reading-time";
 
-const BASE_PATH = "/src/posts";
+const BASE_PATH = "/src/blog";
 const POSTS_PATH = path.join(process.cwd(), BASE_PATH);
 
 export const parsePostAbstract = (postPath: string): TPostAbstract => {
@@ -16,7 +16,7 @@ export const parsePostAbstract = (postPath: string): TPostAbstract => {
     .replace(".mdx", "");
 
   const [category, slug] = filePath.split("/");
-  const url = `/posts/${category}/${slug}`;
+  const url = `/blog/${category}/${slug}`;
 
   return { url, category, slug };
 };
@@ -36,14 +36,18 @@ const parsePostDetail = async (postPath: string): Promise<TPostDetail> => {
   const dateString = dayjs(grayMatter.date)
     .locale("ko")
     .format("YYYY년 MM월 DD일");
+  const keywords = data["keywords"]
+    ?.split(",")
+    .map((keyword: string) => keyword.trim());
 
   return {
+    ...grayMatter,
+    title: data["title"],
     dateString,
     readingMinutes,
     content,
-    title: data["title"],
+    keywords,
     createdAt: data["createdAt"],
-    ...grayMatter,
   };
 };
 

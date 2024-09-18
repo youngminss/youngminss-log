@@ -2,6 +2,7 @@ import FloatingActions from "@/components/layout/FloatingActions";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import ThemeProvider from "@/components/providers/ThemeProvider";
+import Sonnar from "@/components/ui/Sonnar";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -31,7 +32,15 @@ export default function RootLayout({
           <Header />
           {children}
           <Footer />
+
           <FloatingActions />
+          <Sonnar
+            position="top-center"
+            duration={1000}
+            toastOptions={{
+              className: "bg-[var(--background)] text-[var(--foreground)]",
+            }}
+          />
         </ThemeProvider>
       </body>
     </html>

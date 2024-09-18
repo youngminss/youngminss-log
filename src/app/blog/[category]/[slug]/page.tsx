@@ -1,4 +1,3 @@
-import Giscus from "@/components/Comments/Giscus";
 import PostBody from "@/components/post/PostBody";
 import PostFooter from "@/components/post/PostFooter";
 import PostHeader from "@/components/post/PostHeader";
@@ -17,11 +16,10 @@ const PostDetail = async ({
 
   return (
     <main>
-      <div className="mx-auto flex max-w-[64rem] flex-col px-[2rem]">
+      <div className="mx-auto flex max-w-[64rem] flex-col px-[1.6rem]">
         <PostHeader post={post} />
         <PostBody post={post} />
         <PostFooter />
-        <Giscus />
       </div>
 
       <PostToC />

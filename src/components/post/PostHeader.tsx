@@ -3,15 +3,38 @@ import { TPost } from "@/types/post";
 import { AUTHOR_NAME } from "@/utils/const";
 import Image from "next/image";
 import Avatars from "../ui/Avatars";
+import { Badge } from "../ui/badge";
 
 const PostHeader = ({ post }: { post: TPost }) => {
-  const { title, introduction, readingMinutes, thumbnail, createdAt } = post;
+  const {
+    title,
+    introduction,
+    readingMinutes,
+    thumbnail,
+    keywords,
+    createdAt,
+  } = post;
 
   const createdDateOnly = createdAt.split(" ")[0];
 
   return (
     <div className="flex flex-col">
       <h2 className="font-pretendard text-[3.2rem] font-bold">{title}</h2>
+
+      {keywords && (
+        <div className="scrollbar-hide inline-flex gap-x-[0.4rem] overflow-x-auto pt-[0.4rem]">
+          {keywords.map((keyword) => {
+            return (
+              <Badge
+                key={`postKeyword_Badge_${keyword}`}
+                className="px-[0.8rem] py-[0.2rem] text-[1.3rem]"
+              >
+                {keyword}
+              </Badge>
+            );
+          })}
+        </div>
+      )}
 
       <div className="flex items-end justify-between py-[1.6rem]">
         <div className="flex items-center gap-x-[0.8rem]">

@@ -12,7 +12,7 @@ const ScrollProgress = () => {
 
   const pathname = usePathname();
   const showScrollProgress =
-    pathname.startsWith(`/posts`) && pathname.split(`/`).length > 3; // TODO: Post detail 인 경우에만 노출하도록 임시 구현
+    pathname.startsWith(`/blog`) && pathname.split(`/`).length > 3; // TODO: Post detail 인 경우에만 노출하도록 임시 구현
 
   const [progress, setProgress] = useState(INITIAL_PROGRESS);
 

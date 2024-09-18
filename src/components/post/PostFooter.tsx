@@ -1,6 +1,7 @@
-// TODO : Connect giscus
+import Giscus from "../Comments/Giscus";
+
 const PostFooter = () => {
-  return <div></div>;
+  return <Giscus />;
 };
 
 export default PostFooter;

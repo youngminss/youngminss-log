@@ -3,6 +3,11 @@ import Avatars from "@/components/ui/Avatars";
 import { parseDate } from "@/functions/date";
 import { getPostList } from "@/functions/post";
 import { AUTHOR_NAME, GITHUB_PROFILE, PROFILE_BIO } from "@/utils/const";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `Blog`
+}
 
 const Posts = async () => {
   const postList = (await getPostList()).sort((a, b) =>

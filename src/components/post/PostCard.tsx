@@ -25,7 +25,6 @@ const PostCard = async ({ post }: { post: TPost }) => {
         {thumbnail && (
           <div className="relative aspect-[1.618] overflow-clip max-postCard:h-[18rem] postCard:h-[12rem]">
             <Image
-              className="transition-all duration-300 group-hover:scale-110"
               src={thumbnail}
               alt="post-card-thumbnail"
               layout="fill"

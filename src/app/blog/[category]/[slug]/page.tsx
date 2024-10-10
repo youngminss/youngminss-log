@@ -16,7 +16,7 @@ export async function generateMetadata(
   const post = await getPostDetail({ category, slug });
   const { title, introduction, thumbnail, keywords, createdAt } = post;
 
-  return {
+  const metadata = {
     title,
     description: introduction,
     keywords,
@@ -37,6 +37,8 @@ export async function generateMetadata(
       alternateLocale: "en_US",
     },
   };
+
+  return metadata;
 }
 
 const PostDetail = async ({ params: { category, slug } }: TPostDetailProps) => {

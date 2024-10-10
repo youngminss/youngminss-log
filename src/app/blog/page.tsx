@@ -3,10 +3,18 @@ import Avatars from "@/components/ui/Avatars";
 import { parseDate } from "@/functions/date";
 import { getPostList } from "@/functions/post";
 import { AUTHOR_NAME, GITHUB_PROFILE, PROFILE_BIO } from "@/utils/const";
-import { Metadata } from "next";
+import { ResolvingMetadata } from "next";
 
-export const metadata: Metadata = {
-  title: `Blog`
+export async function generateMetadata(_: any, parent: ResolvingMetadata) {
+  const parentOpenGraph = (await parent).openGraph;
+
+  const metadata = {
+    ...parentOpenGraph,
+    title: `Blog`,
+    url: `${parentOpenGraph?.url}/blog`,
+  };
+
+  return metadata;
 }
 
 const Posts = async () => {

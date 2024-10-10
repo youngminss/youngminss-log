@@ -25,7 +25,7 @@ export async function generateMetadata(
       description: introduction,
       type: "website",
       siteName: "youngminss-log",
-      url: "www.youngminss-log.com",
+      url: `www.youngminss-log.com/blog/${category}/${slug}`,
       images: thumbnail
         ? {
             url: thumbnail,

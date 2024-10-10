@@ -14,8 +14,31 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "영민하다",
-  description: "생각나면 기록을 하세요 :) ",
+  title: {
+    template: `%sㅣyoungminss-log`,
+    default: "youngminss-log",
+  },
+  description: "🌟 Let the brighter shine the brighter.",
+  authors: [{ name: "Youngmin Wi", url: "www.youngminss-log.com" }],
+  creator: "Youngmin Wi",
+  publisher: "Youngmin Wi",
+  generator: "Next.js",
+  applicationName: "youngminss-log",
+  formatDetection: {
+    email: false,
+    telephone: false,
+  },
+  openGraph: {
+    title: "youngminss-log",
+    description: "🌟 Let the brighter shine the brighter.",
+    type: "website",
+    siteName: "youngminss-log",
+    url: "www.youngminss-log.com",
+    images:
+      "https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F1e48ae17-fbee-406f-9bca-eaae95ca4225%2F423c0680-e08e-481d-8b03-49485cbbe0ea%2Fdefault-thumbnail.webp?table=block&id=1190e255-48e7-808f-b0a4-cc7ba411ac40&spaceId=1e48ae17-fbee-406f-9bca-eaae95ca4225&width=2000&userId=90a7e981-8cb0-4578-9ca1-25c51ac47e43&cache=v2",
+    locale: "ko_KR",
+    alternateLocale: "en_US",
+  },
 };
 
 export default function RootLayout({

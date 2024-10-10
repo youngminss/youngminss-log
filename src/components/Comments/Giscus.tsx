@@ -20,7 +20,7 @@ const Giscus = ({ className }: { className?: string }) => {
     $script.id = "comment-giscus";
     $script.crossOrigin = "anonymous";
     $script.async = true;
-    $script.setAttribute("data-repo", "youngminss/youngminss-blog");
+    $script.setAttribute("data-repo", "youngminss/youngminss-log");
     $script.setAttribute("data-repo-id", "R_kgDOL45lkQ");
     $script.setAttribute("data-category", "Comments");
     $script.setAttribute("data-category-id", "DIC_kwDOL45lkc4ChZxk");

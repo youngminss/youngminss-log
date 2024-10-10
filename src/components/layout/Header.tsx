@@ -9,7 +9,7 @@ const Header = () => {
     >
       <div className="mx-auto flex h-[6.4rem] w-full max-w-[120rem] items-center">
         <h1 className="font-pretendard text-[3.2rem] font-black">
-          <Link href="/">영민하다</Link>
+          <Link href="/">youngminss-log</Link>
         </h1>
 
         <ScrollProgress />

@@ -3,6 +3,7 @@ import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import ThemeProvider from "@/components/providers/ThemeProvider";
 import Sonnar from "@/components/ui/Sonnar";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -68,6 +69,8 @@ export default function RootLayout({
             }}
           />
         </ThemeProvider>
+
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
       </body>
     </html>
   );

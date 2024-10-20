@@ -29,7 +29,7 @@ const CustomCodeBlock = ({
   };
 
   return (
-    <div style={{ position: "relative" }}>
+    <div className="relative">
       <button
         disabled={isCopied || isLoading}
         aria-label={isCopied ? "Copied!" : "Copy code"}

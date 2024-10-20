@@ -1,14 +1,14 @@
 import { rgbDataURL } from "@/functions/image";
 import { TPost } from "@/types/post";
-// import { transformerCopyButton } from "@rehype-pretty/transformers";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Image from "next/image";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypePrettyCode, { Options } from "rehype-pretty-code";
+import rehypePrettyCode, { type Options } from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 import remarkUnwrapImages from "remark-unwrap-images";
+import CustomCodeBlock from "./CustomCodeBlock";
 
 const components = {
   h1: (props: any) => (
@@ -70,6 +70,7 @@ const components = {
     <li className="font-pretendard text-[1.6rem] leading-[150%]" {...props} />
   ),
   blockquote: (props: any) => <blockquote className="mb-[1.6rem]" {...props} />,
+  pre: (props: any) => <CustomCodeBlock {...props} />,
 };
 
 const prettyCodeOptions: Options = {
@@ -78,12 +79,6 @@ const prettyCodeOptions: Options = {
     dark: "slack-dark",
     light: "slack-dark",
   },
-  // transformers: [
-  //   transformerCopyButton({
-  //     visibility: "always",
-  //     feedbackDuration: 3000,
-  //   }),
-  // ],
 };
 
 const PostBody = ({ post }: { post: TPost }) => {

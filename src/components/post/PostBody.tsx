@@ -8,7 +8,8 @@ import rehypeSlug from "rehype-slug";
 import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 import remarkUnwrapImages from "remark-unwrap-images";
-import CustomCodeBlock from "./CustomCodeBlock";
+import Callout, { TCalloutProps } from "./common/Callout";
+import CustomCodeBlock from "./common/CustomCodeBlock";
 
 const components = {
   h1: (props: any) => (
@@ -71,6 +72,7 @@ const components = {
   ),
   blockquote: (props: any) => <blockquote className="mb-[1.6rem]" {...props} />,
   pre: (props: any) => <CustomCodeBlock {...props} />,
+  Callout: (props: TCalloutProps) => <Callout {...props} />,
 };
 
 const prettyCodeOptions: Options = {

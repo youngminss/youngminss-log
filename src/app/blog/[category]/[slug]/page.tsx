@@ -2,7 +2,7 @@ import PostBody from "@/components/post/PostBody";
 import PostFooter from "@/components/post/PostFooter";
 import PostHeader from "@/components/post/PostHeader";
 import PostToC from "@/components/post/PostToC";
-import { getPostDetail } from "@/functions/post";
+import { getPost } from "@/functions/post";
 import { Metadata, ResolvingMetadata } from "next";
 
 type TPostDetailProps = {
@@ -13,7 +13,7 @@ export async function generateMetadata(
   { params: { category, slug } }: TPostDetailProps,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const post = await getPostDetail({ category, slug });
+  const post = await getPost({ category, slug });
   const { title, introduction, thumbnail, keywords, createdAt } = post;
 
   const metadata = {
@@ -42,7 +42,7 @@ export async function generateMetadata(
 }
 
 const PostDetail = async ({ params: { category, slug } }: TPostDetailProps) => {
-  const post = await getPostDetail({
+  const post = await getPost({
     category: category,
     slug: slug,
   });

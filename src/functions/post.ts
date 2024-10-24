@@ -9,6 +9,51 @@ import readingTime from "reading-time";
 const BASE_PATH = "/src/blog";
 const POSTS_PATH = path.join(process.cwd(), BASE_PATH);
 
+export const getCategoryList = () => {
+  const categoryPathList: string[] = sync(`${POSTS_PATH}/*`);
+  const categoryList = categoryPathList.map(
+    (path) => path.split("/").slice(-1)?.[0],
+  );
+
+  return categoryList;
+};
+
+export const getPostList = async (category?: string) => {
+  const pathList: string[] = getPostPathList(category);
+  const postList = await Promise.all(
+    pathList.map((postPath) => parsePost(postPath)),
+  );
+
+  return postList;
+};
+
+export const getPost = async ({
+  category,
+  slug,
+}: {
+  category: string;
+  slug: string;
+}) => {
+  const postPath = `${POSTS_PATH}/${category}/${slug}/content.mdx`;
+  const post = await parsePost(postPath);
+
+  return post;
+};
+
+export const getPostPathList = (category?: string) => {
+  const categoryPath = category || "**";
+  const postPathList: string[] = sync(`${POSTS_PATH}/${categoryPath}/**/*.mdx`);
+
+  return postPathList;
+};
+
+const parsePost = async (postPath: string): Promise<TPost> => {
+  const postAbstract = parsePostAbstract(postPath);
+  const postDetail = await parsePostDetail(postPath);
+
+  return { ...postAbstract, ...postDetail };
+};
+
 export const parsePostAbstract = (postPath: string): TPostAbstract => {
   const filePath = postPath
     .slice(postPath.indexOf(BASE_PATH))
@@ -21,90 +66,25 @@ export const parsePostAbstract = (postPath: string): TPostAbstract => {
   return { url, category, slug };
 };
 
-const parsePost = async (postPath: string): Promise<TPost> => {
-  const postDetail = await parsePostDetail(postPath);
-  const postAbstract = parsePostAbstract(postPath);
-
-  return { ...postAbstract, ...postDetail };
-};
-
 const parsePostDetail = async (postPath: string): Promise<TPostDetail> => {
   const file = fs.readFileSync(postPath, "utf8");
-  const { data, content } = matter(file); // data = matter 를 통해 읽은 mdx 의 요약 정보를 가져옴
-  const grayMatter = data;
-  const readingMinutes = Math.ceil(readingTime(content).minutes);
-  const dateString = dayjs(grayMatter.date)
-    .locale("ko")
-    .format("YYYY년 MM월 DD일");
+  const { data, content } = matter(file);
+
+  const title = data["title"];
   const keywords = data["keywords"]
     ?.split(",")
     .map((keyword: string) => keyword.trim());
+  const createdAt = data["createdAt"];
+  const dateString = dayjs(data.date).locale("ko").format("YYYY년 MM월 DD일");
+  const readingMinutes = Math.ceil(readingTime(content).minutes);
 
   return {
-    ...grayMatter,
-    title: data["title"],
+    ...data,
+    title,
+    keywords,
+    createdAt,
     dateString,
     readingMinutes,
     content,
-    keywords,
-    createdAt: data["createdAt"],
   };
-};
-
-export const getPostDetail = async ({
-  category,
-  slug,
-}: {
-  category: string;
-  slug: string;
-}) => {
-  const filePath = `${POSTS_PATH}/${category}/${slug}/content.mdx`;
-  const detail = await parsePost(filePath);
-  return detail;
-};
-
-export const getPostPaths = (category?: string) => {
-  const folder = category || "**";
-  const paths: string[] = sync(`${POSTS_PATH}/${folder}/**/*.mdx`);
-  return paths;
-};
-
-export const getPostList = async (category?: string) => {
-  const paths: string[] = getPostPaths(category);
-  const posts = await Promise.all(paths.map((postPath) => parsePost(postPath)));
-  return posts;
-};
-
-export const getCategoryList = () => {
-  const categoryPaths: string[] = sync(`${POSTS_PATH}/*`);
-  const categoryList = categoryPaths.map(
-    (path) => path.split("/").slice(-1)?.[0],
-  );
-  return categoryList;
-};
-
-// mdx 의 createdAt 지정한 형식
-export const parseDateString = (dateString: string) => {
-  const [datePart, timePart] = dateString.split(" ");
-  const [year, month, day] = datePart
-    .split(".")
-    .map((part) => part.trim())
-    .map(Number);
-
-  const period = dateString.includes("오전") ? "오전" : "오후";
-  const timeString = dateString.split(period)[1].trim();
-  const { hour, minute, second } = convertTo24Hour(timeString, period);
-
-  return new Date(year, month - 1, day, hour, minute, second);
-};
-
-const convertTo24Hour = (timeString: string, period: string) => {
-  let [hour, minute, second] = timeString.split(":").map(Number);
-
-  if (period === "오후" && hour !== 12) {
-    hour += 12;
-  } else if (period === "오전" && hour === 12) {
-    hour = 0;
-  }
-  return { hour, minute, second };
 };

@@ -74,8 +74,7 @@ const FloatingActions = () => {
           />
 
           <PostToC
-            className={`rounded- fixed right-0 top-[10rem] rounded-[0.8rem] bg-[var(--background)] transition-[transform] duration-300 will-change-transform pc:!hidden ${isPostTocOn ? `-translate-x-[2rem]` : `translate-x-full`}`}
-            isPinVisible={false}
+            className={`fixed right-0 top-[10rem] rounded-[0.8rem] bg-[var(--background)] transition-[transform] duration-300 will-change-transform pc:!hidden ${isPostTocOn ? `-translate-x-[2rem]` : `translate-x-full`}`}
             onCloseButtonClick={() => setIsPostTocOn(false)}
           />
         </>

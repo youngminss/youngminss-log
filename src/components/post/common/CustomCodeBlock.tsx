@@ -34,7 +34,7 @@ const CustomCodeBlock = ({
         disabled={isCopied || isLoading}
         aria-label={isCopied ? "Copied!" : "Copy code"}
         onClick={handleClickCopy}
-        className="absolute right-[1rem] top-[1rem] z-[100] flex h-fit w-fit items-center gap-x-[0.4rem] rounded-[0.4rem] bg-black px-[0.8rem] py-[0.4rem] !text-[rgb(220,220,213)]"
+        className="absolute right-[1rem] top-[1rem] flex h-fit w-fit items-center gap-x-[0.4rem] rounded-[0.4rem] bg-black px-[0.8rem] py-[0.4rem] !text-[rgb(220,220,213)]"
       >
         <span className="relative h-[1.4rem] w-[1.4rem]">
           {isCopied ? <Check size="100%" /> : <Copy size="100%" />}

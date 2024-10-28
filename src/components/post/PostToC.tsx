@@ -1,6 +1,7 @@
 "use client";
 
 import { CircleX } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MouseEventHandler, useEffect, useState } from "react";
 
@@ -13,9 +14,8 @@ interface IToCItem {
 
 const SCROLL_FOR_TOC_STICKY = 300;
 const LEVEL_INDENT_CLASS_NAME_MAP: { [key: string]: string } = {
-  H1: "p-0",
-  H2: "p-2",
-  H3: "p-4",
+  H2: "py-2",
+  H3: "py-2 pl-2",
 };
 
 const PostToC = ({
@@ -65,8 +65,8 @@ const PostToC = ({
     const $postBody = document.getElementById("post-body");
 
     if ($postBody) {
-      // step 1 : h1 ~ h3 태그까지 추출
-      const hTagList = $postBody.querySelectorAll("h1, h2, h3"); // h1, h2, h3 정도만 ToC 로 활용
+      // step 1 : h2 ~ h3 태그까지 추출
+      const hTagList = $postBody.querySelectorAll("h2, h3"); // h2, h3 정도만 ToC 로 활용
 
       // step 2 : ToC 리스트 만들기 (item = tagName, text, id)
       const postToCListTemp: IToCItem[] = [];
@@ -169,12 +169,12 @@ const PostToC = ({
     >
       <div className="relative !w-[20rem] rounded-[0.8rem] border-[0.2rem] border-solid border-[var(--foreground)] px-[1.2rem] py-[0.8rem]">
         {isPinVisible && (
-          <div className="absolute right-0 top-0 flex -translate-y-1/2 translate-x-1/2 items-center justify-center bg-[var(--background)] pl-[0.4rem] text-[3rem] transition-none">
-            📌
+          <div className="absolute right-0 top-0 flex -translate-y-1/2 translate-x-1/2 -rotate-45 items-center justify-center pl-[0.4rem] text-[3rem] transition-none">
+            🏷️
           </div>
         )}
 
-        <div className="scroll max-pc:max-h-[32rem] max-pc:overflow-y-scroll pc:max-h-[60rem]">
+        <div className="max-pc:max-h-[32rem] max-pc:overflow-y-scroll pc:max-h-[60rem]">
           {postToCList.map((postToCItem, index) => {
             const { level, text, href } = postToCItem;
 
@@ -185,9 +185,13 @@ const PostToC = ({
                 key={index}
                 className={`${LEVEL_INDENT_CLASS_NAME_MAP[level]} ${isHighlight ? `font-semibold text-[var(--highlight)]` : ``} text-[var(--foreground) py-[0.4rem] text-[1.2rem]`}
               >
-                <a href={`#${href}`} onClick={handleToCItemClick}>
+                <Link
+                  className="line-clamp-1 break-all"
+                  href={`#${href}`}
+                  onClick={handleToCItemClick}
+                >
                   {text}
-                </a>
+                </Link>
               </div>
             );
           })}

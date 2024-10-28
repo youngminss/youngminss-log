@@ -3,7 +3,9 @@ import PostFooter from "@/components/post/PostFooter";
 import PostHeader from "@/components/post/PostHeader";
 import PostToC from "@/components/post/PostToC";
 import { getPost } from "@/functions/post";
+import { generateBlogPostingSchema } from "@/functions/schema";
 import { Metadata, ResolvingMetadata } from "next";
+import Script from "next/script";
 
 type TPostDetailProps = {
   params: { category: string; slug: string };
@@ -16,7 +18,7 @@ export async function generateMetadata(
   const post = await getPost({ category, slug });
   const { title, introduction, thumbnail, keywords, createdAt } = post;
 
-  const metadata = {
+  const metadata: Metadata = {
     title,
     description: introduction,
     keywords,
@@ -29,8 +31,8 @@ export async function generateMetadata(
       images: thumbnail
         ? {
             url: thumbnail,
-            width: 1200,
-            height: 800,
+            width: "1200",
+            height: "800",
           }
         : undefined,
       locale: "ko_KR",
@@ -47,6 +49,8 @@ const PostDetail = async ({ params: { category, slug } }: TPostDetailProps) => {
     slug: slug,
   });
 
+  const blogPostingSchema = generateBlogPostingSchema({ category, slug, post });
+
   return (
     <main>
       <div className="mx-auto flex max-w-[64rem] flex-col px-[1.6rem]">
@@ -56,6 +60,11 @@ const PostDetail = async ({ params: { category, slug } }: TPostDetailProps) => {
       </div>
 
       <PostToC />
+
+      <Script
+        type="application/ld-json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
+      />
     </main>
   );
 };

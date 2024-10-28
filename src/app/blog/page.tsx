@@ -2,16 +2,21 @@ import PostCard from "@/components/post/PostCard";
 import Avatars from "@/components/ui/Avatars";
 import { parseDate } from "@/functions/date";
 import { getPostList } from "@/functions/post";
+import { generateBlogSchema } from "@/functions/schema";
 import { AUTHOR_NAME, GITHUB_PROFILE, PROFILE_BIO } from "@/utils/const";
-import { ResolvingMetadata } from "next";
+import { Metadata, ResolvingMetadata } from "next";
+import Script from "next/script";
 
 export async function generateMetadata(_: any, parent: ResolvingMetadata) {
   const parentOpenGraph = (await parent).openGraph;
 
-  const metadata = {
-    ...parentOpenGraph,
+  const metadata: Metadata = {
     title: `Blog`,
-    url: `${parentOpenGraph?.url}/blog`,
+    openGraph: {
+      ...parentOpenGraph,
+      title: `Blog`,
+      url: `${parentOpenGraph?.url}/blog`,
+    },
   };
 
   return metadata;
@@ -23,6 +28,8 @@ const Posts = async () => {
       ? 1
       : -1,
   );
+
+  const blogSchema = generateBlogSchema();
 
   return (
     <main className="mx-auto min-h-[calc(100vh_-_18.9rem)] max-w-[64rem]">
@@ -46,6 +53,11 @@ const Posts = async () => {
           return <PostCard key={`${category}_${slug}_postCard`} post={post} />;
         })}
       </div>
+
+      <Script
+        type="application/ld-json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }}
+      />
     </main>
   );
 };

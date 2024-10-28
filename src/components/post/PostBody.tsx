@@ -2,12 +2,13 @@ import { rgbDataURL } from "@/functions/image";
 import { TPost } from "@/types/post";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Image from "next/image";
+import Link from "next/link";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode, { type Options } from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
+import rehypeUnwrapImages from "rehype-unwrap-images";
 import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
-import remarkUnwrapImages from "remark-unwrap-images";
 import Callout, { TCalloutProps } from "./common/Callout";
 import CustomCodeBlock from "./common/CustomCodeBlock";
 
@@ -49,30 +50,47 @@ const components = {
     />
   ),
   p: (props: any) => (
-    <p className="pb-[1.6rem] font-pretendard text-[1.6rem]" {...props} />
+    <p
+      className="pb-[1.6rem] font-pretendard text-[1.6rem] leading-[150%]"
+      {...props}
+    />
   ),
   hr: (props: any) => (
     <hr className="my-[1.6rem] border-[var(--foreground)]" {...props} />
   ),
   img: (props: any) => (
-    <figure className="relative mb-[1.6rem] aspect-[1.618]">
+    <figure className="relative mb-[1.6rem]">
       <Image
         alt={props.alt || "image"}
-        layout="fill"
-        objectFit="cover"
+        layout="responsive"
+        width={1.618}
+        height={1}
+        objectFit="contain"
         placeholder="blur"
         blurDataURL={rgbDataURL(233, 233, 233)}
         {...props}
       />
     </figure>
   ),
-  ul: (props: any) => <ul className="list-inside list-disc" {...props} />,
+  ul: (props: any) => (
+    <ul className="mb-[1.6rem] list-inside list-disc" {...props} />
+  ),
+  ol: (props: any) => (
+    <ul className="mb-[1.6rem] list-inside list-decimal" {...props} />
+  ),
   li: (props: any) => (
     <li className="font-pretendard text-[1.6rem] leading-[150%]" {...props} />
   ),
   blockquote: (props: any) => <blockquote className="mb-[1.6rem]" {...props} />,
   pre: (props: any) => <CustomCodeBlock {...props} />,
   Callout: (props: TCalloutProps) => <Callout {...props} />,
+  a: (props: any) => (
+    <Link
+      className="text-[var(--highlight)] hover:underline hover:underline-offset-2"
+      target="_blank"
+      {...props}
+    />
+  ),
 };
 
 const prettyCodeOptions: Options = {
@@ -91,8 +109,9 @@ const PostBody = ({ post }: { post: TPost }) => {
         source={post.content}
         options={{
           mdxOptions: {
-            remarkPlugins: [remarkUnwrapImages, remarkGfm, remarkBreaks],
+            remarkPlugins: [remarkGfm, remarkBreaks],
             rehypePlugins: [
+              rehypeUnwrapImages,
               rehypeSlug,
               rehypeAutolinkHeadings,
               [rehypePrettyCode, prettyCodeOptions],

@@ -1,0 +1,295 @@
+---
+title: "블로그 개발기 (feat. Next.js 14 + MDX)"
+thumbnail: "https://img.notionusercontent.com/s3/prod-files-secure%2F1e48ae17-fbee-406f-9bca-eaae95ca4225%2Fa1660791-9892-4113-859f-dc5cf6c19517%2Fthumbnail.webp/size/w=2000?exp=1729873763&sig=IeEyO2EV3Zl38QkUhMBmqbIXEolOtaWcuqr-hpraXMs"
+introduction: "Next.js 14 버전 환경에서 MDX 를 활용하여 블로그 초안을 개발하기까지 과정을 담았습니다."
+keywords: "Next.js, MDX, Blog"
+createdAt: "2024-10-25 오전 02:00:00"
+---
+
+안녕하세요, Youngminss 입니다. 오랜만에 블로그 포스팅을 올리게 되었습니다 🙂
+그 시작을 이번에 직접 만들게 된 새로운 블로그가 되었습니다.
+
+이전까지는 작성한 글을 여느 블로그 서비스([Velog](https://velog.io/@youngminss/posts), [Hashnode](https://youngmin.hashnode.dev/?source=top_nav_blog_home), [Tistory](https://youngminieo1005.tistory.com/notice/56) 정도 사용했던 거 같네요)에 올렸었는데요, 무엇보다 `글을 작성하는 것` 자체에 의미를 둔 이유가 컸기 때문이었다고 생각합니다.
+
+어떤 주제로 글을 작성해 볼지 생각하다가 첫 시작을 오랜 백로그(?)였던 블로그를 직접 개발해 보고, 개발하면서 생긴 이슈들을 기록해 보면 좋겠다고 생각했습니다.
+
+블로그를 직접 개발하고 싶단 생각의 시작은 다음과 같았습니다.
+
+1. **원하는 새로운 기능 추가나 수정 및 스타일 작업을 자유롭게 하고 싶다.**
+2. **SEO 최적화를 위해 여러 시도를 하고 싶다. (기술적 측면, 콘텐츠 측면)**
+3. **"내 것" 에서 "재밌게" 하고 싶다.**
+
+이번 첫 포스팅에서는 Next.js (App Router, 14 ver) 환경에서 MDX 를 활용하여 초기 구조를 만들기까지의 과정을 기록하려 합니다.
+
+<br />
+<br />
+
+## ✅ Next.js 프로젝트 생성 및 의존성 패키지 설치
+
+> 자세한 정보는 [repo](https://github.com/youngminss/youngminss-log) <a href="" target="_blank"></a> 를 확인해 주세요.
+
+이 글에서 소개할 과정에서 필요한 주요 의존성 패키지들은 다음과 같습니다.
+
+- [next (14.2.12) (by. create-next-app)](https://nextjs.org/docs/app/api-reference/cli/create-next-app)
+- [next-mdx-remote (^5.0.0)](https://www.npmjs.com/package/next-mdx-remote)
+- [glob (^10.3.15)](https://www.npmjs.com/package/glob)
+- [gray-matter (^4.0.3)](https://www.npmjs.com/package/gray-matter)
+- [dayjs (^1.11.11)](https://www.npmjs.com/package/dayjs)
+- [reading-time (^1.5.0)](https://www.npmjs.com/package/reading-time)
+
+<br />
+<br />
+
+## ✅ 주요 프로젝트 구조
+
+> 글에서 필요한 최소한의 구조만 표현합니다.
+
+```text title="주요 프로젝트 구조" {7, 16, 23}
+...
+📦src
+ ┣ 📂app
+ ┃ ┣ 📂blog
+ ┃ ┃ ┣ 📂[category]
+ ┃ ┃ ┃ ┗ 📂[slug]
+ ┃ ┃ ┃   ┗ 📜page.tsx   // 글 상세 페이지
+ ┃ ┃ ┗ 📜page.tsx       // 글 전체 목록 페이지
+ ┃ ┣ 📜layout.tsx
+ ┃ ┗ 📜page.tsx
+ ┣ 📂blog               // 글 모음 디렉터리
+ ┃ ┗ 📂category-1
+ ┃ ┃ ┗ 📂post-1
+ ┃ ┃   ┗ 📜content.mdx  // ex. "/blog/category-1/post-1" 에서 보여줄 글
+ ┣ 📂functions
+ ┃ ┗ 📜post.ts          // 글 정보 전처리 관련 함수 모음
+ ┣ 📂types
+ ┃ ┗ 📜post.ts          // 글 데이터 관련 타입
+ ┣ 📂components
+ ┃ ┣ 📂Comments
+ ┃ ┃ ┗ 📜Giscus.tsx
+ ┃ ┣ 📂post
+ ┃ ┃ ┗ 📜PostBody.tsx   // 전처리된 mdx -> html 컴포넌트
+...
+```
+
+위 구조 중 이 글에서 중점적으로 볼 것들은 강조된 파일들입니다.
+먼저, 글 `.mdx` 파일의 데이터 전처리 로직을 모아놓은 `@functions/post.ts` 를 확인하겠습니다.
+
+<br />
+<br />
+
+### @functions/post.ts
+
+이번 글과 연관된 파일 내 주요 함수들에 대한 모식도와 코드 블록입니다.
+
+![image-1](/images/blog/nextjs-blog/building-project-with-mdx/image-1.webp)
+
+```ts title="@functions/post.ts" showLineNumbers {9-10, 29, 49-50}
+import { TPost, TPostAbstract, TPostDetail } from "@/types/post";
+import dayjs from "dayjs";
+import fs from "fs";
+import { sync } from "glob";
+import matter from "gray-matter";
+import path from "path";
+import readingTime from "reading-time";
+
+const BASE_PATH = "/src/blog";
+const POSTS_PATH = path.join(process.cwd(), BASE_PATH);
+
+...
+
+export const getPost = async ({
+  category,
+  slug,
+}: {
+  category: string;
+  slug: string;
+}) => {
+  const postPath = `${POSTS_PATH}/${category}/${slug}/content.mdx`;
+  const post = await parsePost(postPath);
+
+  return post;
+};
+
+const parsePost = async (postPath: string): Promise<TPost> => {
+  const postAbstract = parsePostAbstract(postPath);
+  const postDetail = await parsePostDetail(postPath);
+
+  return { ...postAbstract, ...postDetail };
+};
+
+// 글 category, slug, path 반환 함수
+export const parsePostAbstract = (postPath: string): TPostAbstract => {
+  const filePath = postPath
+    .slice(postPath.indexOf(BASE_PATH))
+    .replace(`${BASE_PATH}/`, "")
+    .replace(".mdx", "");
+
+  const [category, slug] = filePath.split("/");
+  const url = `/blog/${category}/${slug}`;
+
+  return { url, category, slug };
+};
+
+// 글 상세 데이터 파싱 함수
+const parsePostDetail = async (postPath: string): Promise<TPostDetail> => {
+  const file = fs.readFileSync(postPath, "utf8");
+  const { data, content } = matter(file);
+
+  const title = data["title"];
+  const keywords = data["keywords"]
+    ?.split(",")
+    .map((keyword: string) => keyword.trim());
+  const createdAt = data["createdAt"];
+  const dateString = dayjs(data.date).locale("ko").format("YYYY년 MM월 DD일");
+  const readingMinutes = Math.ceil(readingTime(content).minutes);
+
+  return {
+    ...data,
+    title,
+    keywords,
+    createdAt,
+    dateString,
+    readingMinutes,
+    content,
+  };
+};
+
+// 전체 글 카테고리 리스트 반환 함수
+export const getCategoryList = () => {
+  const categoryPathList: string[] = sync(`${POSTS_PATH}/*`);
+  const categoryList = categoryPathList.map(
+    (path) => path.split("/").slice(-1)?.[0],
+  );
+
+  return categoryList;
+};
+
+// 전체 글 path 리스트 반환 함수 (특정 카테고리에 대한 글 path 리스트도 가능)
+export const getPostPathList = (category?: string) => {
+  const categoryPath = category || "**";
+  const postPathList: string[] = sync(`${POSTS_PATH}/${categoryPath}/**/*.mdx`);
+
+  return postPathList;
+};
+
+// 전체 글 리스트 반환 함수 (특정 카테고리에 대한 글 리스트도 가능)
+export const getPostList = async (category?: string) => {
+  const pathList: string[] = getPostPathList(category);
+  const postList = await Promise.all(
+    pathList.map((postPath) => parsePost(postPath)),
+  );
+
+  return postList;
+};
+...
+```
+
+먼저 line 9-10과 같이 작성한 mdx 파일들이 존재할 루트 경로를 생성합니다.
+
+특정 글에 대한 데이터는 `getPost` 함수를 실행하면 얻어낼 수 있습니다.
+루트 경로에 `category`, `slug` 붙여서 `parsePost` 호출하면 반환받습니다.
+(필요한 **category** 와 **slug** 는 Next.js 의 [Dynamic Routes](https://nextjs.org/docs/pages/building-your-application/routing/dynamic-routes) 를 통해 해당 글에 대한 두 정보를 추출할 수 있습니다.)
+
+**parsePost** 함수는 `parsePostAbstract` 함수를 호출하여 **category, slug** 와 같은 글의 카테고리 데이터를 반환하고, `parsePostDetail` 함수를 호출하여 **title, thumbnailUrl, content 등** 과 같은 실질적인 글 상세 페이지에 필요한 데이터를 반환합니다.
+
+**parsePostDetail** 이 핵심인데 line 49 와 같이 postPath 에 존재하는 mdx 파일을 불러오면 file 변수에서는 string 타입의 mdx 전문이 담깁니다. (이는 Next.js 가 SSR 나 RSC 지원하고 해당 로직이 서버에서 작동할 수 있기 때문에 작동합니다.)
+
+이 string 데이터를 line 50 와 같이 gray-matter 의 **matter** 함수에 넘기면 [front-matter](https://jekyllrb.com/docs/front-matter/) 데이터(= data)와 본문 데이터(= content)를 얻을 수 있습니다.
+
+최종적으로 **parsePost** 함수 결과로 `TPost` 타입의 글 데이터를 얻어낼 수 있습니다.
+
+(line 71 부터 끝까지는 위에서 설명한 주요 함수들과 더하여 glob 을 활용해 전체 카테고리나 글 데이터 리스트를 반환하는 함수들 입니다.)
+
+<br />
+<br />
+
+### app/blog/[category]/[slug]/page.tsx
+
+Next.js 에서는 (RSC 라는 가정하에) 다음과 같이 글 데이터를 받아 `PostBody` 로 내려줍니다.
+
+```tsx title="app/blog/[category]/[slug]/page.tsx" showLineNumbers
+import PostBody from "@/components/post/PostBody";
+import { getPost } from "@/functions/post";
+...
+
+type TPostDetailProps = {
+  params: { category: string; slug: string };
+};
+
+...
+
+const PostDetail = async ({ params: { category, slug } }: TPostDetailProps) => {
+  const post = await getPost({
+    category: category,
+    slug: slug,
+  });
+
+  return (
+    <>
+	  <PostBody post={post} />
+    </>
+  );
+};
+
+export default PostDetail;
+
+```
+
+<br />
+<br />
+
+### @components/post/PostBody.tsx
+
+**PostBody** 에서는 **TPost** 형태에 글 데이터를 내려받습니다. 글 데이터에서 **content 프로퍼티**(string 타입)를 `MDXRemote` 컴포넌트에 다음과 같이 주입해 줍니다.
+**MDXRemote** 가 content 데이터를 받아 컴파일된 React 컴포넌트 형태로 변환해 줍니다. (MDXRemote는 **RSC** 를 지원합니다. 자세한 것은 [next-mdx-remote](https://github.com/hashicorp/next-mdx-remote) 를 확인해 주세요.)
+
+```tsx title="@components/post/PostBody.tsx" showLineNumbers
+import { TPost } from "@/types/post";
+import { MDXRemote } from "next-mdx-remote/rsc";
+...
+
+const PostBody = ({ post }: { post: TPost }) => {
+  ...
+  return (
+      <MDXRemote
+        source={post.content}
+		...
+      />
+  );
+};
+
+export default PostBody;
+```
+
+> source 는 꼭 string 타입이 아니어도 다음과 같은 데이터 타입을 지원합니다.
+
+![image-2](/images/blog/nextjs-blog/building-project-with-mdx/image-2.webp)
+
+<br />
+<br />
+
+## 😢 만났던 이슈
+
+여기까지 하면 mdx 에 작성한 글이 hmtl 형태로 렌더링 되는 것을 확인해 보실 수 있습니다.
+단, 다음과 문제가 발생할 수 있습니다. html 중에 이미지를 삽입한 부분에 대해 실제 렌더링 된 결과를 보면 다음과 같이 `paragraph tag(이하 p 태그)` 가 래핑 된 것이 확인될 수 있습니다.
+
+![image-3](/images/blog/nextjs-blog/building-project-with-mdx/image-3.webp)
+
+이에 따라 html 구조 상 **p 태그 내부에 block 가 포함된 옳지 않은 구조가 발생**해서 다음과 같은 경고를 브라우저에서 확인할 수 있습니다.
+
+![image-4](/images/blog/nextjs-blog/building-project-with-mdx/image-4.webp)
+
+이는 [mdx 에서 발생하던 issue](https://github.com/mdx-js/mdx/issues/208) 였던 것으로 확인했습니다. 관련되어 **remark-unwrap-image** mdx plugin 을 활용해서 해결했다는 [comment](https://github.com/rpearce/react-medium-image-zoom/issues/429#issuecomment-1751040358) 를 확인하고 적용했습니다. 이제는 관련된 경고가 발생하지 않는 것을 확인해 볼 수 있을 것입니다. (업데이트 : [remark-unwrap-image 는 deprecated 되었고](https://github.com/remarkjs/remark-unwrap-images?tab=readme-ov-file) 대신 [rehype-unwrap-images](https://github.com/rehypejs/rehype-unwrap-images) 로 대체된 것 같습니다.)
+
+<br />
+<br />
+
+## 👋 마무리하며
+
+> 오류 제보나 피드백은 언제나 환영입니다. 🙂
+
+직접 블로그를 개발하기 위해 느낀 것은 기술적으로 지원하는 것도 풍부해졌고 참고할 수 있는 자료도 상당히 많은 것 같습니다. 이번 글과는 크게 상관없는 부분(예를 들어, 스타일 작업 등)만 제외했을 때는 크게 품을 들이지 않아도 쉽게 개인 블로그를 개발할 수 있게 된 것 같습니다.
+
+이 블로그에서 확인할 수 있는 몇몇 기능(Code Block, ToC 등)에 대한 글도 하나씩 풀고, 추가하고 싶은데 아직 구현 중인 것도 더 추가해서(연관 글, 시리즈 등) 공유해보려 합니다. 조금씩 살을 더해가는 재미도 직접 블로그를 개발하는 재미 요소인 것 같습니다.
+
+혹시나 이 글을 읽고 아직 직접 개발하는 것이 품이 많이 들어 망설이는 분이 있다면 고민은 그만하고 바로 시작해 보시는 것은 어떠신가요 😁

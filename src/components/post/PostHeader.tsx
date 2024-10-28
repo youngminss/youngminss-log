@@ -57,7 +57,7 @@ const PostHeader = ({ post }: { post: TPost }) => {
       </div>
 
       {thumbnail && (
-        <div className="relative aspect-[1.618]">
+        <div className="relative my-[1.6rem] aspect-[1.618]">
           <Image
             className="mx-auto"
             src={thumbnail}
@@ -68,12 +68,6 @@ const PostHeader = ({ post }: { post: TPost }) => {
             blurDataURL={rgbDataURL(233, 233, 233)}
           />
         </div>
-      )}
-
-      {introduction && (
-        <p className="py-[1.6rem] font-pretendard text-[1.6rem] font-normal">
-          {introduction}
-        </p>
       )}
     </div>
   );

@@ -55,6 +55,7 @@ const Posts = async () => {
       </div>
 
       <Script
+        id="blog-schema"
         type="application/ld-json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }}
       />

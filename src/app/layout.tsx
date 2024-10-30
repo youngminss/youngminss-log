@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     siteName: "youngminss-log",
     url: "www.youngminss-log.com",
     images: {
-      url: "https://img.notionusercontent.com/s3/prod-files-secure%2F1e48ae17-fbee-406f-9bca-eaae95ca4225%2F423c0680-e08e-481d-8b03-49485cbbe0ea%2Fdefault-thumbnail.webp/size/w=1420?exp=1728609878&sig=worghfA3ILv-f4kAAL6KkPKMcVGa8Wk3GmOM6GAXYn8",
+      url: "https://img.notionusercontent.com/s3/prod-files-secure%2F1e48ae17-fbee-406f-9bca-eaae95ca4225%2Fcd3aabb2-241e-4409-bef9-3cbf3bc1f5a3%2Fthumbnail-default.webp/size/w=2000?exp=1730394410&sig=7HLE-bBjWrZSeJzSfzbZW-Oe7ZNOf0iCcqVNu1MX0G4",
       width: 1200,
       height: 800,
     },

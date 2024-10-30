@@ -1,8 +1,8 @@
-import { timeDifference } from "@/functions/date";
 import { rgbDataURL } from "@/functions/image";
 import { TPost } from "@/types/post";
 import Image from "next/image";
 import Link from "next/link";
+import TimeDifference from "./common/TimeDifference";
 
 const PostCard = async ({ post }: { post: TPost }) => {
   const { url, title = "", introduction, thumbnail, createdAt } = post;
@@ -19,7 +19,7 @@ const PostCard = async ({ post }: { post: TPost }) => {
             )}
           </div>
 
-          <span className="pt-[1.2rem]">{timeDifference(createdAt)}</span>
+          <TimeDifference createdAt={createdAt} />
         </div>
 
         {thumbnail && (

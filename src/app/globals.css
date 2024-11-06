@@ -150,6 +150,20 @@ figure[data-rehype-pretty-code-figure] {
   @apply mb-[1.2rem] overflow-clip rounded-[0.8rem] border border-solid;
 }
 
+figure[data-rehype-pretty-code-figure] pre {
+  overflow-x: auto;
+  scrollbar-width: none;
+  @apply py-[1.6rem];
+}
+
+figure[data-rehype-pretty-code-figure] pre [data-line] {
+  @apply px-[1.6rem] text-[1.4rem];
+}
+
+figure[data-rehype-pretty-code-figure] pre::-webkit-scrollbar {
+  scrollbar-width: none;
+}
+
 figure[data-rehype-pretty-code-figure]
   figcaption[data-rehype-pretty-code-title] {
   @apply border-b border-solid border-[var(--foreground)] px-[1.6rem] py-[1rem] text-[1.4rem] font-semibold;
@@ -157,20 +171,6 @@ figure[data-rehype-pretty-code-figure]
 
 figure[data-rehype-pretty-code-figure] div[data-rehype-pretty-code-title] {
   @apply border-b border-solid border-[var(--foreground)] px-[1.6rem] py-[1rem] text-[1.4rem] font-semibold;
-}
-
-figure[data-rehype-pretty-code-figure] pre {
-  overflow-x: auto;
-  scrollbar-width: none;
-  @apply bg-[var-] py-[1.6rem];
-}
-
-figure[data-rehype-pretty-code-figure] pre::-webkit-scrollbar {
-  scrollbar-width: none;
-}
-
-figure[data-rehype-pretty-code-figure] pre [data-line] {
-  @apply px-[1.6rem] text-[1.4rem];
 }
 
 figure[data-rehype-pretty-code-figure]
@@ -211,10 +211,6 @@ code span[data-highlighted-line] {
 }
 
 /* Fenced Code block - word highlight */
-mark[data-highlighted-chars] {
-  @apply bg-teal-400 bg-opacity-25;
-}
-
 mark[data-chars-id="r"] {
   @apply bg-red-400 bg-opacity-25;
 }

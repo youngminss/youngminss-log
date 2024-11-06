@@ -1,0 +1,376 @@
+---
+title: "블로그 개발기 (Code-Block Customizing)"
+thumbnail: "/images/blog/nextjs-blog/customizing-code-block/thumbnail.webp"
+introduction: "MDX 를 활용한 블로그 개발 중 Code-Block 커스터마이징 과정을 담았습니다."
+keywords: "MDX, HTML, Rehype, Rehype-Pretty-Code"
+createdAt: "2024-11-06 오후 05:45:00"
+---
+
+안녕하세요 youngminss 입니다. 저번 포스팅에서는 [블로그 개발기 (feat. Next.js 14 + MDX)](https://www.youngminss-log.com/blog/nextjs-blog/building-project-with-mdx) 를 다뤘습니다.
+
+이번 글에서는 본문 내에서 보이는 **Code-Block(이하, 코드 블록) 을 커스텀하는 방법**에 대해 기록하려 합니다. 또한 코드 블록 사용 시 유용한 문법까지 소개해 보려 합니다. 🚀
+
+<br />
+<br />
+
+## ✅ MDX Plugin 활용해서 코드 블록 기본 테마 적용하기
+
+MDX 로 개발된 블로그에서는 추가적인 기능을 구현하기위해 활용될 수 있는 다양한 Plugin(이하, 플러그인) 들이 존재한다는 것이 큰 장점 중에 하나라고 생각합니다. **remark** 플러그인과 **rehype** 플러그인이 대표적인데요.
+
+**remark, rehype** 는 다음과 같이 설명할 수 있습니다.
+
+- [remark](https://github.com/remarkjs/remark/tree/main) : Markdown 을 처리하는 라이브러리
+- [rehype](https://github.com/rehypejs/rehype/tree/main) : HTML 을 처리하는 라이브러리
+
+이 둘의 파생된 관련 플러그인들이 다양하게 있는데요, 이 글에서는 이에 대한 설명은 아니기 때문에 자세한 사항은 다음을 확인해 주세요. ([remark plugins](https://github.com/remarkjs/remark/blob/main/doc/plugins.md#list-of-plugins), [rehype plugins](https://github.com/rehypejs/rehype/blob/main/doc/plugins.md#list-of-plugins))
+
+이 글에서는 렌더링 된 HTML 코드 블록을 커스텀하는 것이 목적이라고 했는데요.
+그래서 rehype 플러그인에 해당하는 `rehype-pretty-code` 를 사용했습니다.
+
+[rehype-pretty-code](https://rehype-pretty.pages.dev/) 페이지에 접근하자 보이는 소개 글을 번역하면 다음과 같이 볼 수 있습니다.
+
+> **rehype-pretty-code** 는 **shiki** 구문 강조 도구를 활용한 **Rehype** 플러그인으로, **Markdown**이나 **MDX**의 코드 블록 하이라이팅을 제공합니다. 이는 **빌드 시 서버에서 코드 블록을 미리 하이라이팅**하기 때문에, **런타임 구문 강조를 피하면서** 클라이언트 성능을 최적화할 수 있습니다. **또한, 동적 하이라이팅**이 필요한 경우 클라이언트에서도 동작하도록 구성할 수 있습니다. 따라서 **빌드 시 구문 강조와 클라이언트 동적 처리가 모두 가능해, 정적 사이트 생성(SSG)과 서버 사이드 렌더링(SSR) 환경 모두에서 유용합니다.**
+
+적용 방법은 간단합니다. 이전 포스팅에서 구현된 **MDXRemote** 컴포넌트에 설치한 rehype-pretty-code 플러그인을 import 하고 컴포넌트의 rehypePlugins props 에 Array 형태로 첫 번째 요소에 주입합니다. (두 번째 요소에 있는 Options 타입의 데이터는 rehype-pretty-code 에서 제공하는 옵션 객체입니다)
+
+```ts title="@components/post/PostBody.tsx" showLineNumbers {3} {6-12} {23-26}
+import { TPost } from "@/types/post";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import rehypePrettyCode, { type Options } from "rehype-pretty-code";
+...
+
+const prettyCodeOptions: Options = {
+  keepBackground: true,
+  theme: {
+    dark: "slack-dark",
+    light: "slack-dark",
+  },
+};
+
+
+const PostBody = ({ post }: { post: TPost }) => {
+  ...
+  return (
+      <MDXRemote
+        source={post.content}
+		options={{
+          mdxOptions: {
+            ...
+            rehypePlugins: [
+              ...
+              [rehypePrettyCode, prettyCodeOptions],
+            ],
+          },
+        }}
+      />
+  );
+};
+
+export default PostBody;
+```
+
+함께 주입하는 `Options` 데이터에 대한 부연 설명으론 지원하는 속성 및 타입은 다음과 같습니다.
+여기서 사용된 theme 속성의 경우 단일 `Theme` 로 설정할 수도 있고, `Record<string, Theme>` 형태로도 설정이 가능합니다.
+
+```ts title="rehype-pretty-code/dist/index.d.ts - Options interface" showLineNumbers {3}
+interface Options {
+  grid?: boolean;
+  theme?: Theme | Record<string, Theme>;
+  keepBackground?: boolean;
+  defaultLang?:
+    | string
+    | {
+        block?: string;
+        inline?: string;
+      };
+  tokensMap?: Record<string, string>;
+  transformers?: Array<ShikiTransformer>;
+  filterMetaString?(str: string): string;
+  getHighlighter?(
+    options: BundledHighlighterOptions<any, any>,
+  ): Promise<Highlighter>;
+  onVisitLine?(element: LineElement): void;
+  onVisitHighlightedLine?(element: LineElement, id: string | undefined): void;
+  onVisitHighlightedChars?(element: CharsElement, id: string | undefined): void;
+  onVisitTitle?(element: Element): void;
+  onVisitCaption?(element: Element): void;
+}
+```
+
+지원하는 Theme 을 직접 타입정의 파일에 접근해서 살펴봐도 좋고, [여기서](https://shiki.style/guide/#playground) 는 적용 가능한 Theme 를 미리 확인해 볼 수 있으니 참고하면 됩니다.
+
+<br />
+<br />
+
+## ✅ 디테일한 코드 블록 스타일 적용
+
+위 작업까지 완료하면 우리가 원하는 theme 에 해당하는 스타일이 적용된 채로 보였으면 하겠지만 실제로는 다음과 같이 아주 기본 설정만 된 채로 렌더링됩니다.
+
+![image-1](/images/blog/nextjs-blog/customizing-code-block/image-1.webp)
+
+보다시피 설정한 theme 에 맞는 코드 블록의 컬러도 없고, 폰트 사이즈도 작으며 코드 블록의 간격도 마음에 들지 않습니다.
+
+이런 스타일을 수정하기 위해서는 css 코드를 추가할 것이 있는데요, 그전에 위 작업물이 HTML 상에서 어떻게 표현되는지 확인해보겠습니다.
+
+![image-2](/images/blog/nextjs-blog/customizing-code-block/image-2.webp)
+
+확인해보면 mdx 에서는 코드 블록으로 표현했던 것이 **rehype-pretty-code** 플러그인 덕분에 렌더링된 HTML 상에서는 코드 블록 컨테이터인 `figure 태그`와 `data-rehype-pretty-code-figure` 와 같은 [data-\* 속성](https://developer.mozilla.org/ko/docs/Learn/HTML/Howto/Use_data_attributes) 이 적용됩니다. **figure** 태그의 하위 요소들에도 태그 및 속성들이 적용 되어있는 것을 확인할 수 있습니다. 우리는 이것들을 활용해서 CSS 코드를 추가할 것입니다. 코드는 다음과 같습니다. 제가 적용한 기준으로 간단하게나마 주석을 추가했습니다.
+
+```css title="@app/global.css - theme 에 맞는 스타일 적용을 위해 추가된 CSS" showLineNumbers {18-21} {37-40}
+...
+
+@layer base {
+  ..
+  /* === light mode (default) === */
+  :root {
+    ...
+
+    /* === Code block - 코드블록 배경색 및 코드 조각 색을 설정한 shiki 테마에 맞게 === */
+    figure[data-rehype-pretty-code-figure] {
+      @apply border-[var(--foreground)];
+    }
+
+    figure[data-rehype-pretty-code-figure] pre {
+      @apply bg-[var(--shiki-light-bg)];
+    }
+
+    code[data-theme*=" "],
+    code[data-theme*=" "] span {
+      color: var(--shiki-light);
+    }
+  }
+
+  /* === dark mode === */
+  .dark {
+    ...
+
+    /* === Code block - 코드블록 배경색 및 코드 조각 색을 설정한 shiki 테마에 맞게 === */
+    figure[data-rehype-pretty-code-figure] {
+      @apply border-[var(--foreground)];
+    }
+
+    figure[data-rehype-pretty-code-figure] pre {
+      @apply bg-[var(--shiki-dark-bg)];
+    }
+
+    code[data-theme*=" "],
+    code[data-theme*=" "] span {
+      color: var(--shiki-dark);
+    }
+  }
+}
+
+...
+
+/* === Code block - basic structure (= 코드블록 간격, 라인별 간격, 폰트 크기 정도) === */
+figure[data-rehype-pretty-code-figure] {
+  @apply mb-[1.2rem] overflow-clip rounded-[0.8rem] border border-solid;
+}
+
+figure[data-rehype-pretty-code-figure] pre {
+  overflow-x: auto;
+  scrollbar-width: none;
+  @apply py-[1.6rem];
+}
+
+figure[data-rehype-pretty-code-figure] pre::-webkit-scrollbar {
+  scrollbar-width: none;
+}
+
+figure[data-rehype-pretty-code-figure] pre [data-line] {
+  @apply px-[1.6rem] text-[1.4rem];
+}
+...
+```
+
+코드에서 우선으로 확인해 볼 부분은 **line 18-21 / line 37-40** 입니다.
+이 부분은 코드 블록에서 각 코드 조각에 대해 적용한 theme 의 해당하는 **shiki 컬러값**이 담긴 [custom properties](https://developer.mozilla.org/ko/docs/Web/CSS/Using_CSS_custom_properties) 가 적용되도록 하는 부분입니다.
+
+저는 다크모드에 필요한 속성을 구분하기 위해 **:root** 와 **.dark** 클래스에 분리했었습니다.
+이 부분에 각각 `--shiki--light`, `--shiki--dark` 라는 컬러값이 테마모드에 맞게 적용될 것입니다.
+
+나머지 스타일도 같은 맥락으로 [CSS Selector](https://developer.mozilla.org/ko/docs/Web/CSS/CSS_selectors) 를 통해 접근해서 배경색, 코드 블록의 간격, 테두리 등 원하는 스타일을 적용하면서 입맛에 맞게 수정하면 됩니다. 저는 결과적으로 현재 보고 있는 코드 블록과 같이 보이도록 스타일을 적용했습니다.
+
+이렇게 작성된 CSS 파일을 **root 의 layout.tsx 에서 import 해놓았습니다.** 이 작업까지 진행했다면 다음과 같은 전후 결과를 확인할 수 있을 것입니다.
+| As-is | To-be |
+| :----------------------------------------------------------------------: | :----------------------------------------------------------------------: |
+| ![image-1](/images/blog/nextjs-blog/customizing-code-block/image-1.webp) | ![image-3](/images/blog/nextjs-blog/customizing-code-block/image-3.webp) |
+
+<br />
+<br />
+
+## ✅ 코드 블럭 유용한 문법
+
+<Callout
+  type="info"
+  children={
+    <span>
+      여기서부턴 필수적으로 적용할 사항들은 아닙니다. 하지만 아래에서 소개하는
+      방법들을 추가하면 좀 더 완성도 있는 코드 블록 사용이 가능하다고
+      생각합니다.
+    </span>
+  }
+/>
+
+### 1. title
+
+> 코드 블록의 제목을 넣을 수 있습니다.
+
+````text title="코드 블록 상단 title"
+``` title="코드 블록 상단 title"
+// ... code
+```
+````
+
+```css title="@app/global.css - title 영역 스타일을 위한 css 추가"
+/* === Code block - title (= 코드블록 상단에 제목 영역) === */
+figure[data-rehype-pretty-code-figure]
+  figcaption[data-rehype-pretty-code-title] {
+  @apply border-b border-solid border-[var(--foreground)] px-[1.6rem] py-[1rem] text-[1.4rem] font-semibold;
+}
+
+figure[data-rehype-pretty-code-figure] div[data-rehype-pretty-code-title] {
+  @apply border-b border-solid border-[var(--foreground)] px-[1.6rem] py-[1rem] text-[1.4rem] font-semibold;
+}
+```
+
+<br />
+
+### 2. caption
+
+> 코드 블록의 부연 설명을 넣을 수 있습니다.
+
+````text caption="코드 블록 하단 caption"
+``` caption="코드 블록 하단 caption"
+// ... code
+```
+````
+
+```css title="@app/global.css - caption 영역 스타일을 위한 css 추가"
+/* === Code block - caption (= 코드블록 하단에 부연설명 영역) === */
+figure[data-rehype-pretty-code-figure]
+  figcaption[data-rehype-pretty-code-caption] {
+  @apply border-t border-solid border-[var(--foreground)] px-[1.6rem] py-[1rem] text-[1.4rem] font-semibold;
+}
+
+figure[data-rehype-pretty-code-figure] div[data-rehype-pretty-code-caption] {
+  @apply border-t border-solid border-[var(--foreground)] px-[1.6rem] py-[1rem] text-[1.4rem] font-semibold;
+}
+```
+
+<br />
+
+### 3. showLineNumbers 또는 showLineNumbers\{n}
+
+> 코드 블록의 각 라인을 표기할 수 있습니다
+
+````text title="예시) line 표현해라." showLineNumbers
+``` showLineNumbers
+line 1
+line 2
+line 3
+line 4
+```
+````
+
+````text title="예시) line 표현을 3부터 보여라." showLineNumbers{3}
+``` showLineNumbers{3}
+line 1
+line 2
+line 3
+line 4
+```
+````
+
+```css title="@app/global.css - line number 스타일을 위한 css 추가"
+/* === Fenced Code block - line number style (= 코드블록 좌측에 라인별 번호) === */
+code[data-line-numbers] {
+  counter-reset: line;
+}
+
+code[data-line-numbers] > span[data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+
+  display: inline-block;
+  width: 0.75rem;
+  margin-right: 1.6rem;
+  text-align: right;
+  color: gray;
+}
+
+code[data-line-numbers-max-digits="2"] > span[data-line]::before {
+  width: 1.6rem;
+}
+
+code[data-line-numbers-max-digits="3"] > span[data-line]::before {
+  width: 2.6rem;
+}
+```
+
+<br />
+
+### 4. \{n} 또는 \{n-m}
+
+> 코드 블록에서 특정 line 을 강조할 수 있습니다.
+
+````text title="예시) 2~3, 5 line 만 강조" showLineNumbers {2-3} {5}
+``` {2-3} {5}
+line 1
+line 2
+line 3
+line 4
+```
+````
+
+```css title="@app/global.css - line highlight 스타일을 위한 css 추가"
+/* === Code block - highlighted-line (= 강조하고 싶은 코드라인) === */
+code span[data-highlighted-line] {
+  @apply border-y-0 border-l-2 border-blue-400 bg-indigo-400 bg-opacity-10 pl-[calc(0.5rem-2px)] dark:border-blue-500 dark:bg-slate-700 md:pl-[calc(1rem_-_2px)];
+}
+```
+
+<br />
+
+### 5. word highlight
+
+> 코드 블록에서 특정 단어 단위로 강조할 수 있습니다.
+
+```ts title="예시) /word1/#r /word2/#g /word3/#b" /word1/#r /word2/#g /word3/#b
+const word1 = "word1";
+const word2 = "word2";
+const word3 = "word3";
+```
+
+```css title="@app/global.css - word highlight 스타일을 위한 css 추가"
+/* === Fenced Code block - word highlight (= 코드 조각별 하이라이팅, 예시 케이스 기준이고 본인이 필요한대로 추가나 수정 가능) === */
+mark[data-chars-id="r"] {
+  @apply bg-red-400 bg-opacity-25;
+}
+
+mark[data-chars-id="g"] {
+  @apply bg-green-400 bg-opacity-25;
+}
+
+mark[data-chars-id="b"] {
+  @apply bg-blue-400 bg-opacity-25;
+}
+```
+
+<br />
+<br />
+
+## 👋 마무리하며
+
+이번 글에서는 블로그 본문에서 Code-Block 영역의 스타일을 커스터마이징했던 과정을 다뤘습니다. 요약하자면 다음과 같습니다.
+
+- MDX 의 Rehype 플러그인 중 Rehype-Pretty-Code 을 활용해서 원하는 theme 를 적용
+- 디테일한 스타일을 위해 CSS Selector 활용해서 CSS 코드를 추가
+
+추가로 코드 블록에서 빈번하게 활용할 수 있는 문법들을 몇 가지 소개했습니다.
+
+원래는 현재 코드 블록마다 우측 상단에 존재하는 `코드 블록 복사` 기능을 추가한 과정도 담으려 했으나 길어져서 이 과정은 다른 포스팅에서 소개해 보겠습니다.
+
+긴 글 읽어주셔서 감사합니다 😋
+
+> 오류 제보나 피드백은 언제나 환영입니다. 🙂

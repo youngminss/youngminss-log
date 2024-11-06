@@ -91,6 +91,27 @@ const components = {
       {...props}
     />
   ),
+  table: (props: any) => (
+    <table
+      className="my-[1.6rem] border border-solid border-[var(--foreground)]"
+      {...props}
+    />
+  ),
+  th: (props: any) => (
+    <th
+      className="border-b border-[var(--foreground)] font-pretendard text-[1.4rem]"
+      {...props}
+    />
+  ),
+  tr: (props: any) => (
+    <tr
+      className="divide-x divide-[var(--foreground)] font-pretendard"
+      {...props}
+    />
+  ),
+  td: (props: any) => (
+    <td className="font-pretendard text-[1.4rem] [&>*]:m-0" {...props} />
+  ),
 };
 
 const prettyCodeOptions: Options = {

@@ -66,6 +66,7 @@ const PostHeader = ({ post }: { post: TPost }) => {
             objectFit="cover"
             placeholder="blur"
             blurDataURL={rgbDataURL(233, 233, 233)}
+            priority
           />
         </div>
       )}

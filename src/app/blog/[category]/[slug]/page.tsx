@@ -2,7 +2,7 @@ import PostBody from "@/components/post/PostBody";
 import PostFooter from "@/components/post/PostFooter";
 import PostHeader from "@/components/post/PostHeader";
 import PostToC from "@/components/post/PostToC";
-import { getPost } from "@/functions/post";
+import { getPost, getPostList } from "@/functions/post";
 import { generateBlogPostingSchema } from "@/functions/schema";
 import { Metadata, ResolvingMetadata } from "next";
 import Script from "next/script";
@@ -11,12 +11,24 @@ type TPostDetailProps = {
   params: { category: string; slug: string };
 };
 
+export const dynamic = "force-static";
+export const revalidate = false; // revalidate: false = Infinity, default 긴 한데 명시적으로 선언
+
+export async function generateStaticParams() {
+  const postList = await getPostList();
+
+  return postList.map((post) => ({
+    category: post.category,
+    slug: post.slug,
+  }));
+}
+
 export async function generateMetadata(
   { params: { category, slug } }: TPostDetailProps,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const post = await getPost({ category, slug });
-  const { title, introduction, thumbnail, keywords, createdAt } = post;
+  const { title, introduction, thumbnail, keywords } = post;
 
   const metadata: Metadata = {
     title,

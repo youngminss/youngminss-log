@@ -1,9 +1,9 @@
 import { TPost } from "@/types/post";
 import { AUTHOR_NAME, GITHUB_PROFILE } from "@/utils/const";
-import { Blog, BlogPosting } from "schema-dts";
 
-export const generateBlogSchema = (): Blog => {
+export const generateBlogSchema = () => {
   return {
+    "@context": "http://schema.org",
     "@type": "Blog",
     name: "Youngminss-log",
     url: "https://www.youngminss-log.com",
@@ -32,10 +32,11 @@ export const generateBlogPostingSchema = ({
   category: string;
   slug: string;
   post: TPost;
-}): BlogPosting => {
+}) => {
   const { title, thumbnail, introduction, content, keywords, createdAt } = post;
 
   return {
+    "@context": "http://schema.org",
     "@type": "BlogPosting",
     headline: title,
     articleBody: content,

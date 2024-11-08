@@ -75,7 +75,7 @@ const PostDetail = async ({ params: { category, slug } }: TPostDetailProps) => {
 
       <Script
         id="post-schema"
-        type="application/ld-json"
+        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
       />
     </main>

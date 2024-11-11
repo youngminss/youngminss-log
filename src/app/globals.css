@@ -246,3 +246,9 @@ blockquote > p {
 :not(pre) > p > code {
   @apply mx-[0.2rem] rounded border px-[0.4rem] py-[0.1rem] font-pretendard text-[1.6rem] font-semibold;
 }
+
+/* (in. safari) table 내 media 같이 사이즈가 큰 컨텐츠가 들어가는 경우, 다음 컨텐츠와 겹침 현상 발생 대응을 위해 */
+/* https://stackoverflow.com/questions/51524842/what-are-webkit-paged-y-and-webkit-paged-x-values-for-overflow */
+.overflow-paged-x {
+  overflow: -webkit-paged-x;
+}

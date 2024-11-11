@@ -110,7 +110,10 @@ const components = {
     />
   ),
   td: (props: any) => (
-    <td className="font-pretendard text-[1.4rem] [&>*]:m-0" {...props} />
+    <td
+      className="overflow-paged-x font-pretendard text-[1.4rem] [&>*]:m-0"
+      {...props}
+    />
   ),
 };
 

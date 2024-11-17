@@ -252,3 +252,21 @@ blockquote > p {
 .overflow-paged-x {
   overflow: -webkit-paged-x;
 }
+
+.lion-sprite-animation {
+  width: 48px;
+  height: 48px;
+  background-image: url("/images/lion-sprite.png");
+  background-repeat: no-repeat;
+  animation: lion-sprite-animation-run 0.5s steps(4) infinite;
+}
+
+/* 애니메이션 설정 */
+@keyframes lion-sprite-animation-run {
+  from {
+    background-position: 0px;
+  }
+  to {
+    background-position: -192px;
+  }
+}

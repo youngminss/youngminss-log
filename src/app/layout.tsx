@@ -68,6 +68,8 @@ export default function RootLayout({
               className: "bg-[var(--background)] text-[var(--foreground)]",
             }}
           />
+
+          <div className="lion-sprite-animation fixed bottom-[2rem] left-[1rem] max-md:hidden" />
         </ThemeProvider>
 
         <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GA_ID} />

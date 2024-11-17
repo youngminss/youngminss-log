@@ -1,5 +1,6 @@
 "use client";
 
+import { throttle } from "@/functions/browser";
 import { CircleX } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -92,9 +93,9 @@ const PostToC = ({
   }, [isServerSide]);
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = throttle(() => {
       setScrollY(window.scrollY);
-    };
+    }, 150);
 
     handleScroll();
 

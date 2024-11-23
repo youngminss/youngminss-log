@@ -6,20 +6,13 @@ import Avatars from "../ui/Avatars";
 import { Badge } from "../ui/badge";
 
 const PostHeader = ({ post }: { post: TPost }) => {
-  const {
-    title,
-    introduction,
-    readingMinutes,
-    thumbnail,
-    keywords,
-    createdAt,
-  } = post;
+  const { title, readingMinutes, thumbnail, keywords, createdAt } = post;
 
   const createdDateOnly = createdAt.split(" ")[0];
 
   return (
     <div className="flex flex-col">
-      <h2 className="font-pretendard text-[3.2rem] font-bold">{title}</h2>
+      <h1 className="font-pretendard text-[3.2rem] font-bold">{title}</h1>
 
       {keywords && (
         <div className="scrollbar-hide inline-flex gap-x-[0.4rem] overflow-x-auto pt-[0.4rem]">

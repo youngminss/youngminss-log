@@ -5,7 +5,6 @@ import { getPostList } from "@/functions/post";
 import { generateBlogSchema } from "@/functions/schema";
 import { AUTHOR_NAME, GITHUB_PROFILE, PROFILE_BIO } from "@/utils/const";
 import { Metadata, ResolvingMetadata } from "next";
-import Script from "next/script";
 
 export const dynamic = "force-static";
 export const revalidate = false;
@@ -57,7 +56,7 @@ const Posts = async () => {
         })}
       </div>
 
-      <Script
+      <script
         id="blog-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }}

@@ -5,7 +5,6 @@ import PostToC from "@/components/post/PostToC";
 import { getPost, getPostList } from "@/functions/post";
 import { generateBlogPostingSchema } from "@/functions/schema";
 import { Metadata, ResolvingMetadata } from "next";
-import Script from "next/script";
 
 type TPostDetailProps = {
   params: { category: string; slug: string };
@@ -73,7 +72,7 @@ const PostDetail = async ({ params: { category, slug } }: TPostDetailProps) => {
 
       <PostToC />
 
-      <Script
+      <script
         id="post-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}

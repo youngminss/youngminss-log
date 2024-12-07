@@ -1,15 +1,16 @@
 "use client";
 
+import { throttle } from "@/functions/browser";
 import { CircleX } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MouseEventHandler, useEffect, useState } from "react";
 
 interface IToCItem {
-  level: string;
-  text: string | null;
-  href: string;
-  absoluteTop: number;
+  level: string; // h tag's level (by. element.nodeName) (ex. H1, H2, H3 ...)
+  text: string | null; // h tag's text data (by. element.textContent)
+  href: string; // h tag's id
+  absoluteTop: number; // h tag's absolute top position inside contents
 }
 
 const SCROLL_FOR_TOC_STICKY = 300;
@@ -28,7 +29,6 @@ const PostToC = ({
   onCloseButtonClick?: () => void;
 }) => {
   const isServerSide = typeof window === "undefined";
-
   const router = useRouter();
 
   const [scrollY, setScrollY] = useState(isServerSide ? 0 : window.scrollY);
@@ -62,13 +62,14 @@ const PostToC = ({
   };
 
   useEffect(() => {
+    // cc. 컨텐츠 본문 컴포넌트에 "post-body" 라는 이름의 id 값을 설정해놓았음
     const $postBody = document.getElementById("post-body");
 
     if ($postBody) {
       // step 1 : h2 ~ h3 태그까지 추출
-      const hTagList = $postBody.querySelectorAll("h2, h3"); // h2, h3 정도만 ToC 로 활용
+      const hTagList = $postBody.querySelectorAll("h2, h3");
 
-      // step 2 : ToC 리스트 만들기 (item = tagName, text, id)
+      // step 2 : ToC 리스트 만들기
       const postToCListTemp: IToCItem[] = [];
 
       hTagList.forEach((hTagItem) => {
@@ -89,13 +90,12 @@ const PostToC = ({
         setPostToCList(postToCListTemp);
       }
     }
-  }, [isServerSide]);
+  }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = throttle(() => {
       setScrollY(window.scrollY);
-    };
-
+    }, 200);
     handleScroll();
 
     if (!isServerSide) {
@@ -175,14 +175,14 @@ const PostToC = ({
         )}
 
         <div className="max-pc:max-h-[32rem] max-pc:overflow-y-scroll pc:max-h-[60rem]">
-          {postToCList.map((postToCItem, index) => {
+          {postToCList.map((postToCItem) => {
             const { level, text, href } = postToCItem;
 
-            const isHighlight = href === highlightToCItem?.href;
+            const isHighlight = text === highlightToCItem?.text;
 
             return (
               <div
-                key={index}
+                key={`toc-item-${text}`}
                 className={`${LEVEL_INDENT_CLASS_NAME_MAP[level]} ${isHighlight ? `font-semibold text-[var(--highlight)]` : ``} text-[var(--foreground) py-[0.4rem] text-[1.2rem]`}
               >
                 <Link

@@ -8,9 +8,9 @@ const Header = () => {
       className="custom-blur sticky top-0 z-[999] backdrop-blur max-pc:px-[2rem]"
     >
       <div className="mx-auto flex h-[6.4rem] w-full max-w-[120rem] items-center">
-        <h1 className="font-pretendard text-[3.2rem] font-black">
+        <span className="font-pretendard text-[3.2rem] font-black">
           <Link href="/">youngminss-log</Link>
-        </h1>
+        </span>
 
         <ScrollProgress />
       </div>

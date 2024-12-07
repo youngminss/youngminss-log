@@ -11,11 +11,11 @@ createdAt: "2024-12-07 오후 08:30:00"
 글을 작성할 때는 `목차`를 두는데요, **ToC** 가 한국어로 번역하면 그 "목차"를 의미합니다.
 ToC 를 글 상세 페이지에 배치하면 **ToC 만 봐도 일차적으로 해당 글에서 소개할 소재들을 파악할 수 있다는 점**과 **필요할 때 빠르게 해당 섹션으로 이동이 가능할 수 있다는 점**이 이점으로 생각이 들어 추가하게 되었습니다.
 
-하나의 글에는 하나의 **주 제목**이 하나 존재할 수 있습니다. 한편 하나의 글 안에서도 목차를 나눌 수 있고 이를 여러 개의 **부제목**으로 구분 지을 수 있습니다.
-
 <br />
 
 ## 🤔 요구사항 분석
+
+하나의 글에는 하나의 **주 제목**이 하나 존재할 수 있습니다. 한편 하나의 글 안에서도 목차를 나눌 수 있고 이를 여러 개의 **부 제목**으로 구분 지을 수 있습니다.
 
 HTML에서 **제목**과 관련된 태그는 `h Tag` (= heading)입니다. 보통 **중요도**에 따라 h1 ~ h6 까지 **계층**을 구분할 수 있습니다. 글에서는 주 제목(h1) 을 시작으로 여러 하위 소제목(h2 ~ h6) 들로 계층을 둔다고 이해할 수 있습니다. 그래서 보통 다음과 같은 구조로 글을 보통 작성합니다.
 
@@ -157,7 +157,7 @@ ToC 데이터를 통해 본인 스타일에 맞는 형태로 UI를 생성하면 
 ![image-3](/images/blog/nextjs-blog/implementing-toc/image-3.webp)
 
 다음 할 작업은 특정 ToC 아이템을 클릭하면 해당 영역으로 이동하는 기능이 필요합니다.
-이전 단계에서 ToC 아이템에 필요한 데이터 중에 id 태그를 Next.js 의 ``태그 href 속성에 `#{id}` 형태로 주입해 주면 됩니다. 그리고`` 태그에 정의한 onClick 이벤트를 등록합니다.
+이전 단계에서 ToC 아이템에 필요한 데이터 중에 id 태그를 Next.js 의 `태그 href 속성에 "#{id}" 형태로 주입해 주면 됩니다.` 그리고 태그에 정의한 onClick 이벤트를 등록합니다.
 
 ```tsx title="섹션 내 이동을 위한 코드 블록" showLineNumbers
 "use client";
@@ -230,7 +230,7 @@ decode & refine 하는 과정이 필요한 이유는 hash 그대로 값을 사�
 
 ![image-4](/images/blog/nextjs-blog/implementing-toc/image-4.webp)
 
-**getElementById** 으로 element 가 있다면 window.scrollTo 로 스크롤 하기 전에 Next.js 의 ``에서 기본 작동 스크롤을 막기 위해 router.push 시 `{ scroll : false }` param 을 설정합니다.`` 태그의 기본 작동인 스크롤을 최상단으로 이동시키는 것을 방지하기 위함입니다. (cc. [참고](https://nextjs.org/docs/app/api-reference/components/link#disable-scrolling-to-the-top-of-the-page))
+**getElementById** 으로 element 가 있다면 window.scrollTo 로 스크롤 하기 전에 Next.js 의 `Link` 태그 `기본 작동 스크롤을 막기 위해 router.push 시 { scroll : false }` param 을 설정합니다. **Link** 태그의 기본 작동인 스크롤을 최상단으로 이동시키는 것을 방지하기 위함입니다. (cc. [참고](https://nextjs.org/docs/app/api-reference/components/link#disable-scrolling-to-the-top-of-the-page))
 
 제가 원한 동작은 ToC 아이템에 해당하는 영역으로 부드럽게 스크롤 되어 이동하길 원했습니다. 이를 위해 window 를 직접 조작해서 Header 바로 밑으로 이동할 영역의 시작점으로 이동시켰습니다.
 
@@ -248,7 +248,7 @@ decode & refine 하는 과정이 필요한 이유는 hash 그대로 값을 사�
 
 스크롤 정보를 저는 state 에 담았습니다. [Web API - Intersection Observer](https://developer.mozilla.org/ko/docs/Web/API/Intersection_Observer_API) 를 사용하면 state 를 사용하지 않고도 쉽고 성능 측면에서도 불필요한 스크롤 state 를 관리할 필요가 없다는 장점이 있었지만, **스크롤을 빠르게 내리는 액션에서 대응이 안되는 이슈**가 있는 것을 확인했습니다. (cc. [참고](https://stackoverflow.com/questions/61951380/intersection-observer-fails-sometimes-when-i-scroll-fast))
 
-블로그에 긁을 읽는 것 외에는 성능이 중요한 별다른 기능은 없었기에 UX 에 문제가 없는 것이 더 중요하다고 생각해서 이 방식을 채택했습니다.
+블로그에 글을 읽는 것 외에는 성능이 중요한 별다른 기능은 없었기에 UX 에 문제가 없는 것이 더 중요하다고 생각해서 이 방식을 채택했습니다.
 
 ```tsx title="ToC 하이라이팅을 위한 코드 블록" showLineNumbers
 "use client";

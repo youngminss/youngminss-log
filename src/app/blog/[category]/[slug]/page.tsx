@@ -4,6 +4,7 @@ import PostHeader from "@/components/post/PostHeader";
 import PostToC from "@/components/post/PostToC";
 import { getPost, getPostList } from "@/functions/post";
 import { generateBlogPostingSchema } from "@/functions/schema";
+import { BASE_URL } from "@/utils/const";
 import { Metadata, ResolvingMetadata } from "next";
 
 type TPostDetailProps = {
@@ -33,12 +34,15 @@ export async function generateMetadata(
     title,
     description: introduction,
     keywords,
+    alternates: {
+      canonical: `${BASE_URL}/blog/${category}/${slug}`,
+    },
     openGraph: {
       title,
       description: introduction,
       type: "website",
       siteName: "youngminss-log",
-      url: `www.youngminss-log.com/blog/${category}/${slug}`,
+      url: `${BASE_URL}/blog/${category}/${slug}`,
       images: thumbnail
         ? {
             url: thumbnail,

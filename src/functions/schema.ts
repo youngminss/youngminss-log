@@ -1,12 +1,12 @@
 import { TPost } from "@/types/post";
-import { AUTHOR_NAME, GITHUB_PROFILE } from "@/utils/const";
+import { AUTHOR_NAME, BASE_URL, GITHUB_PROFILE } from "@/utils/const";
 
 export const generateBlogSchema = () => {
   return {
     "@context": "http://schema.org",
     "@type": "Blog",
     name: "Youngminss-log",
-    url: "https://www.youngminss-log.com",
+    url: `${BASE_URL}`,
     about: "Web Development, Tech, Programming",
     description: "Youngminss-log 입니다. 주로 웹 개발 관련 글을 기록합니다.",
     dateCreated: "2024.10.28",
@@ -62,8 +62,8 @@ export const generateBlogPostingSchema = ({
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://www.youngminss-log.com/${category}/${slug}`,
-      url: `https://www.youngminss-log.com/blog/${category}/${slug}`,
+      "@id": `${BASE_URL}/blog/${category}/${slug}`,
+      url: `${BASE_URL}/blog/${category}/${slug}`,
     },
   };
 };

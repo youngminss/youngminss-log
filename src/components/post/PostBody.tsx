@@ -65,7 +65,9 @@ const components = {
         layout="responsive"
         width={1.618}
         height={1}
-        objectFit="contain"
+        style={{
+          objectFit: "cover",
+        }}
         placeholder="blur"
         blurDataURL={rgbDataURL(233, 233, 233)}
         {...props}

@@ -55,8 +55,10 @@ const PostHeader = ({ post }: { post: TPost }) => {
             className="mx-auto"
             src={thumbnail}
             alt="post-body-thumbnail"
-            layout="fill"
-            objectFit="cover"
+            fill
+            style={{
+              objectFit: "cover",
+            }}
             placeholder="blur"
             blurDataURL={rgbDataURL(233, 233, 233)}
             priority

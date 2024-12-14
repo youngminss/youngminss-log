@@ -27,8 +27,10 @@ const PostCard = async ({ post }: { post: TPost }) => {
             <Image
               src={thumbnail}
               alt="post-card-thumbnail"
-              layout="fill"
-              objectFit="cover"
+              fill
+              style={{
+                objectFit: "cover",
+              }}
               placeholder="blur"
               blurDataURL={rgbDataURL(233, 233, 233)}
             />

@@ -86,7 +86,7 @@ const components = {
   Callout: (props: TCalloutProps) => <Callout {...props} />,
   a: (props: any) => (
     <Link
-      className="text-[var(--highlight)] hover:underline hover:underline-offset-2"
+      className="underline underline-offset-2 hover:text-[var(--highlight)]"
       target="_blank"
       {...props}
     />

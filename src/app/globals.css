@@ -207,7 +207,7 @@ code[data-line-numbers-max-digits="3"] > span[data-line]::before {
 }
 
 code span[data-highlighted-line] {
-  @apply border-y-0 border-l-2 border-blue-400 bg-indigo-400 bg-opacity-10 pl-[calc(0.5rem-2px)] dark:border-blue-500 dark:bg-slate-700 md:pl-[calc(1rem_-_2px)];
+  @apply border-y-0 border-l-2 border-blue-500 bg-blue-400 bg-opacity-10 pl-[calc(0.5rem-2px)] md:pl-[calc(1rem_-_2px)];
 }
 
 /* Fenced Code block - word highlight */

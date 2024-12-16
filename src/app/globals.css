@@ -212,15 +212,15 @@ code span[data-highlighted-line] {
 
 /* Fenced Code block - word highlight */
 mark[data-chars-id="r"] {
-  @apply bg-red-400 bg-opacity-25;
+  @apply bg-red-400 bg-opacity-10;
 }
 
 mark[data-chars-id="g"] {
-  @apply bg-green-400 bg-opacity-25;
+  @apply bg-green-400 bg-opacity-10;
 }
 
 mark[data-chars-id="b"] {
-  @apply bg-blue-400 bg-opacity-25;
+  @apply bg-blue-400 bg-opacity-10;
 }
 
 /* blockquote */

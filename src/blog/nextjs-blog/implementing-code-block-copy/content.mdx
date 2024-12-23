@@ -225,7 +225,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import CustomCodeBlock from "./common/CustomCodeBlock";
 ...
 
-const components = {
+const componentsConfig = {
   ...,
   pre: (props: any) => <CustomCodeBlock {...props} />,
 };
@@ -236,7 +236,7 @@ const PostBody = ({ post }: { post: TPost }) => {
   ...
   return (
       <MDXRemote
-        components={{ ...components }}
+        componentsConfig={{ ...componentsConfig }}
         ...
       />
   );

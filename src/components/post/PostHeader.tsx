@@ -31,7 +31,7 @@ const PostHeader = ({ post }: { post: TPost }) => {
 
       <div className="flex items-end justify-between py-[1.6rem]">
         <div className="flex items-center gap-x-[0.8rem]">
-          <Avatars className="w-[4.8rem]" />
+          <Avatars fill className="w-[4.8rem]" />
 
           <div className="flex flex-col items-start gap-y-[0.2rem]">
             <span className="font-pretendard text-[1.2rem] font-semibold">

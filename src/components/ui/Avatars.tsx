@@ -7,12 +7,18 @@ const Avatars = ({
   className = "",
   src = "/images/profile.webp",
   alt = "youngmin's profile",
+  width,
+  height,
+  fill = false,
   href,
   target,
 }: {
   className?: string;
   src?: string;
   alt?: string;
+  width?: number | `${number}`;
+  height?: number | `${number}`;
+  fill?: boolean;
   href?: string;
   target?: HTMLAttributeAnchorTarget;
 }) => {
@@ -22,7 +28,9 @@ const Avatars = ({
     <Image
       alt={alt}
       src={src}
-      fill
+      width={width}
+      height={height}
+      fill={fill}
       style={{
         objectFit: "cover",
       }}

@@ -27,6 +27,7 @@ const PostCard = async ({ post }: { post: TPost }) => {
             <Image
               src={thumbnail}
               alt="post-card-thumbnail"
+              sizes="(max-width: 640px) 80vw, (max-width: 1200px) 30vw, 300px"
               fill
               style={{
                 objectFit: "cover",

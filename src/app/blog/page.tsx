@@ -39,6 +39,8 @@ const Posts = async () => {
         <Avatars
           href={GITHUB_PROFILE}
           target="_blank"
+          width={48}
+          height={48}
           className="h-[4.8rem] w-[4.8rem] pc:h-[6.4rem] pc:w-[6.4rem]"
         />
         <div className="flx flex-col gap-y-[0.4rem]">

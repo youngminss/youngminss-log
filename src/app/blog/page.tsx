@@ -37,12 +37,12 @@ const Posts = async () => {
     <main className="mx-auto min-h-[calc(100vh_-_18.9rem)] max-w-[64rem]">
       <div className="mx-[1.6rem] mb-[1.6rem] flex items-center gap-x-[1.6rem] border-b-[0.15rem] border-solid border-[var(--foreground)] py-[1.6rem] pc:mb-[2.4rem] pc:py-[2.4rem]">
         <Avatars
+          className="h-[4.8rem] w-[4.8rem] pc:h-[6.4rem] pc:w-[6.4rem]"
           href={GITHUB_PROFILE}
           target="_blank"
-          width={48}
-          height={48}
-          className="h-[4.8rem] w-[4.8rem] pc:h-[6.4rem] pc:w-[6.4rem]"
+          fill
         />
+
         <div className="flx flex-col gap-y-[0.4rem]">
           <span className="font-pretendard text-[1.6rem] font-semibold">
             {AUTHOR_NAME}

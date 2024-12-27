@@ -12,6 +12,7 @@ const Avatars = ({
   fill = false,
   href,
   target,
+  sizes = "48px",
 }: {
   className?: string;
   src?: string;
@@ -21,6 +22,7 @@ const Avatars = ({
   fill?: boolean;
   href?: string;
   target?: HTMLAttributeAnchorTarget;
+  sizes?: string;
 }) => {
   const containerClassName = `relative aspect-square overflow-clip rounded-full ${className}`;
 
@@ -36,6 +38,7 @@ const Avatars = ({
       }}
       placeholder="blur"
       blurDataURL={rgbDataURL(233, 233, 233)}
+      sizes={sizes}
     />
   );
 

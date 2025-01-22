@@ -1,0 +1,150 @@
+---
+title: "정적 콘텐츠를 더욱 빠르게 제공하기 (by. Static-site-generation)"
+thumbnail: "/images/blog/nextjs-blog/serving-by-static-site-generation/thumbnail.webp"
+introduction: "블로그 글 상세 페이지를 사용자에게 더욱 빠르게 제공하기위해 Static-site-generation(SSG) 을 Next.js app router 에서 적용한 방법을 소개합니다."
+keywords: "Dynamic Rendering, Static-Site-Generation"
+createdAt: "2025-01-22 오후 22:00:00"
+---
+
+안녕하세요 youngminss 입니다. 이번 글에서는 현재 보고 있는 블로그 글 상세 페이지를 사용자에게 더 빠르게 제공하기위해 렌더링 방식을 개선한 과정을 소개하려 합니다.
+
+그전에, 먼저 블로그 글 상세 페이지 특징에 대해 언급하고 들어가는 게 좋을 것 같습니다.
+
+어떤 블로그인지에 따라 특징이 다를 수 있지만, 글 상세 페이지의 콘텐츠 대부분은 작성한 글이 대부분입니다. 그리고 글은 **한번 작성하고 나면 특별한 이슈(ex. 오타 수정)가 있지 않은 이상** `변경이 자주 일어나지 않는 데이터` 라는 특징이 있습니다. 이러한 특징이 있다는 것을 이해하고 들어가면 좋을 것 같습니다.
+
+<br />
+<br />
+
+## ✅ 기존 콘텐츠 렌더링 방식
+
+위 설명을 전제하에 변경 전 기존 글 상세 페이지 렌더링 방식을 확인해보겠습니다.
+
+이 블로그는 Next.js (App router) 환경에서 개발되었습니다. 그리고 글 상세 페이지는 서버 컴포넌트(RSC)로 필요한 글 데이터를 받아 필요한 하위 컴포넌트에 내려주는 형태입니다.
+
+대략적인 프로젝트 폴더 구조와 페이지 글 상세 페이지 코드는 대략 아래와 같습니다.
+(자세한 구조와 코드는 [repo](https://github.com/youngminss/youngminss-log) 를 참고해주세요.)
+
+![image-1](/images/blog/nextjs-blog/serving-by-static-site-generation/image-1.webp)
+
+```tsx title="@app/blog/[category]/[slug]/page.tsx" showLineNumbers
+// ... code
+
+const PostDetail = async ({ params: { category, slug } }: TPostDetailProps) => {
+  const post = await getPost({
+    category: category,
+    slug: slug,
+  });
+
+  return (
+    <main>
+      <PostHeader post={post} />
+      <PostBody post={post} />
+      <PostFooter />
+    </main>
+  );
+};
+
+export default PostDetail;
+```
+
+이러한 구조에서 프로젝트를 빌드해보면 해당 경로의 페이지 결과물이 [Dynamic Rendering](https://nextjs.org/docs/app/building-your-application/rendering/server-components#dynamic-rendering) 으로 제공된다는 것을 확인할 수 있습니다. 즉, 블로그 특정 경로에 **글 상세 페이지 요청 시 category, slug 값을 기반**으로 페이지 내용을 `Dynamic(동적)`하게 생성하게 됩니다.
+
+![image-2](/images/blog/nextjs-blog/serving-by-static-site-generation/image-2.webp)
+
+때문에 단점으로는 글 상세 페이지로 전환 시 해당 페이지 내용을 동적으로 만드는 과정이 있기 때문에 **사용자로서는 페이지 전환 시 지연되는 느낌을 받을 수 있게 됩니다.**
+
+<br />
+<br />
+
+## ✅ 변경된 콘텐츠 렌더링 방식
+
+기존의 방식의 단점이 사용자가 특정 글 상세 페이지를 요청 시 동적으로 결과물을 만드는 방식 때문이었다면, 모든 글 상세 페이지 경로에 대한 결과물을 **미리 결과물을 만들어 놓고** 사용자가 특정 글 상세 페이지 경로에 접근 시 바로 서빙해주면 이 문제를 해결할 수 있지 않을까요 ?
+
+> 특정 경로에 대한 결과물을 미리 결과물을 만들어 놓는다.
+
+Next.js Page router로 개발하신 분들이라면 위 내용이 익숙할 수 있습니다. 바로 [Static-site-generation (이하, SSG)](https://nextjs-ko.org/docs/pages/building-your-application/rendering/static-site-generation) 을 적용하는 것과 같은 의미입니다. (Next.js Page router에서는 이를 위해 [getStaticProps](https://nextjs-ko.org/docs/pages/building-your-application/data-fetching/get-static-props) 를 통해 SSG 를 구현할 수 있었습니다.)
+
+이 블로그에 적용된 Next.js App router에서는 [generateStaticParams](https://nextjs-ko.org/docs/app/api-reference/functions/generate-static-params) 를 통해 같은 기능을 구현할 수 있습니다.
+
+```tsx title="@app/blog/[category]/[slug]/page.tsx" showLineNumbers
+// generateStaticParams (= SSG, Page router 기준 getStaticProps)
+export async function generateStaticParams() {
+  const postList = await getPostList();
+
+  // 접근 가능한 글 상세페이지 경로에 대해 빌드 타임에 정적 콘텐츠로 생성
+  return postList.map((post) => ({
+    category: post.category,
+    slug: post.slug,
+  }));
+}
+
+const PostDetail = async ({ params: { category, slug } }: TPostDetailProps) => {
+  const post = await getPost({
+    category: category,
+    slug: slug,
+  });
+
+  return (
+    <main>
+      <PostHeader post={post} />
+      <PostBody post={post} />
+      <PostFooter />
+    </main>
+  );
+};
+
+export default PostDetail;
+```
+
+이러한 구조에서 프로젝트를 빌드해보면 `/blog/[category][slug]` 에 해당하는 접근 가능한 경로에 대해 pre-render 된 HTML 결과물이 생성된 것을 확인해볼 수 있습니다. 이는 generateStaticParams 함수에서 getPostList 를 통해 받아온 블로그 내 글 정보 중에 category, slug 정보들을 알려줬기 때문입니다.
+
+![image-3](/images/blog/nextjs-blog/serving-by-static-site-generation/image-3.webp)
+
+이를 통해 한 번 빌드 타임에 각 경로에 대한 Pre-rendered HTML 파일이 `.next/server` 디렉터리에 저장됩니다. 이후 특정 페이지 요청 시 CDN에 의해 같은 Pre-rendered HTML 파일을 캐시 하여 제공합니다. 따라서, 요청마다 서버가 페이지를 렌더링하는 것 대비 **사용자에게 매우 빠른 응답 속도를 제공** 한다는 장점이 있을 수 있게 됩니다.
+
+<br />
+<br />
+
+## 🚀 결과
+
+### 글 상세페이지로 전환 속도 비교 (네트워크 : 3G throttle)
+
+|                                       As-is                                        |                                       To-be                                        |
+| :--------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------: |
+| ![video-1](/images/blog/nextjs-blog/serving-by-static-site-generation/video-1.gif) | ![video-2](/images/blog/nextjs-blog/serving-by-static-site-generation/video-2.gif) |
+
+<br />
+
+### Lighthouse - Performance - TTFB 비교
+
+![image-4](/images/blog/nextjs-blog/serving-by-static-site-generation/image-4.webp)
+
+[Time to First Byte (TTFB)](https://web.dev/articles/ttfb?hl=ko) 는 브라우저에서 서버로 리소스 요청 시 응답의 첫 번째 바이트가 도착하기 까지의 시간을 의미합니다. 즉 서버 요청에 대해 응답이 얼마나 빠르게 받는지를 의미합니다.
+
+Lighthouse 에서 확인해보면 기존 Dynamic Rendering 으로 글 상세 페이지를 요청할 때마다 동적으로 결과물을 생성해서 응답해줬던 방식 대비, SSG 로 빌드 타임에 미리 생성한 글 상세 페이지 결과물을 요청 즉시 CDN 을 통해 캐싱 결과를 응답해줌으로서 훨씬 빠른 TTFB 성능을 제공한다는 것을 확인할 수 있었습니다.
+
+|                                        As-is                                        |                                        To-be                                        |
+| :---------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------: |
+| ![image-5](/images/blog/nextjs-blog/serving-by-static-site-generation/image-5.webp) | ![image-6](/images/blog/nextjs-blog/serving-by-static-site-generation/image-6.webp) |
+
+TTFB 는 여러 코어 웹 바이탈 지표(ex. [FCP](https://web.dev/articles/fcp?hl=ko), [LCP](https://web.dev/articles/lcp?hl=ko))와도 연관이 있어서 중요한 웹 성능 지표입니다.
+예를 들어, FCP(First Contentful Paint) 는 사용자가 특정 페이지로 이동한 시점으로부터 콘텐츠 일부가 화면에 렌더링 되는 시점까지의 시간을 측정한 지표인데요.
+
+블로그 글 상세 페이지에 대해 SSG 적용 전과 후를 Lighthouse 로드 타임라인에서 확인해보면 FCP 차이가 있는 것을 확인해볼 수 있습니다. 기존 Dynamic Rendering 의 경우는 요청 시 동적으로 결과물을 생성하는 과정이 있다 보니 초기 프레임에 약간의 빈 화면이 측정되는데요. 반면, SSG 를 적용한 경우에는 요청 시 빌드 타임에 생성했던 결과물을 즉시 응답해주기 때문에 초기 프레임부터 콘텐츠가 바로 노출되는 것을 확인할 수 있습니다.
+
+|                                        As-is                                        |                                        To-be                                        |
+| :---------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------: |
+| ![image-7](/images/blog/nextjs-blog/serving-by-static-site-generation/image-7.webp) | ![image-8](/images/blog/nextjs-blog/serving-by-static-site-generation/image-8.webp) |
+
+<br />
+<br />
+
+## 👋 마무리하며
+
+이번 글에서는 블로그 글 특징을 이해하고, 블로그 콘텐츠를 기존 대비 더욱 빠르게 제공하기 위한 방법으로 Static-Site-Generation 을 Next.js app router 에서 적용하는 방법에 대해 정리해봤습니다.
+
+**사용자 요청에 앞서 페이지를 미리 렌더링해도 괜찮은가 ?** 에 대해 허용 가능한 상황이라면 SSG 가 적절할 수 있습니다. 반면, 사용자 요청에 앞서 페이지를 미리 렌더링하면 안 되는 상황이라면 SSG 가 맞지 않을 수 있습니다. 예를 들어 페이지가 자주 업데이트되는 데이터를 보여주거나, 페이지 요청 시마다 최신 데이터로 변경되는 경우가 될 수 있습니다.
+
+이런 경우에는 Server-Side-Rendering(SSR) 을 적용하거나, SEO 가 중요하진 않다면 Client-Side-Rendering(CSR)에 렌더링 최적화를 통해 대응해야 할 것입니다. 또는 매 요청마다 변하진 않고 특정 주기마다 데이터를 업데이트해도 괜찮은 정도라면 [Incremental-Static-Regeneration(ISR)](https://nextjs-ko.org/docs/pages/building-your-application/data-fetching/incremental-static-regeneration) 을 고려해보는 것도 좋은 방법일 것입니다.
+
+> 오류 제보나 피드백은 언제나 환영입니다. 🙂

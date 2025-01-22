@@ -11,9 +11,6 @@ type TPostDetailProps = {
   params: { category: string; slug: string };
 };
 
-export const dynamic = "force-static";
-export const revalidate = false; // revalidate: false = Infinity, default 긴 한데 명시적으로 선언
-
 export async function generateStaticParams() {
   const postList = await getPostList();
 

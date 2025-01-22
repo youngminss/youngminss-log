@@ -6,9 +6,6 @@ import { generateBlogSchema } from "@/functions/schema";
 import { AUTHOR_NAME, GITHUB_PROFILE, PROFILE_BIO } from "@/utils/const";
 import { Metadata, ResolvingMetadata } from "next";
 
-export const dynamic = "force-static";
-export const revalidate = false;
-
 export async function generateMetadata(_: any, parent: ResolvingMetadata) {
   const parentOpenGraph = (await parent).openGraph;
 
